@@ -50,7 +50,7 @@ public class Grid
 		{
 			for (int j = 0; j < height; j++)
 			{
-				g.drawImage(tile(i,j).getTexture(),size*i,size*j,null);
+				g.drawImage(tile(i,j).getTexture(),size*i,size*j,size,size,null);
 			}
 		}
 	}

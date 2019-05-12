@@ -1,5 +1,7 @@
 package Terrain;
 
+import OpenSimplexNoise.OpenSimplexNoise;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
@@ -8,14 +10,41 @@ public class TerrainMaker
 {
 	public Textures textures;
 	private Grid grid;
+	private OpenSimplexNoise noise;
 
 	public TerrainMaker(int width, int height, int size)
 	{
 		grid = new Grid(width,height,size);
 		textures = new Textures();
+		Random r = new Random();
+		long seed = r.nextLong();
+		System.out.println("Map seed: "+seed);
+		noise = new OpenSimplexNoise(seed);
+
 	}
 
-	public Grid generateRandomTerrain()
+	public Grid noiseBased(int divider)
+	{
+		for (int i = 0; i < grid.getWidth(); i++)
+			for (int j = 0; j < grid.getHeight(); j++)
+				try{
+					double rand = Math.abs(noise.eval((double)i/divider,(double)j/divider)) ;
+					if(rand>0.6)
+						grid.tile(i,j).setTextures(textures.water);
+					else if(rand>0.5)
+						grid.tile(i,j).setTextures(textures.sand);
+					else
+						grid.tile(i,j).setTextures(textures.grass);
+				}
+				catch (Exception e)
+				{
+					System.out.println("TerrainMaker texture set error: "+e.getCause());
+				}
+
+		return grid;
+	}
+
+	public Grid randomBased()
 	{
 		Image[][] lookup=
 				{
@@ -23,34 +52,25 @@ public class TerrainMaker
 						textures.water,
 						textures.grass
 				};
-		Random r = new Random();
-
+		Random r=new Random();
 		for (int i = 0; i < grid.getWidth(); i++)
 		{
 			for (int j = 0; j < grid.getHeight(); j++)
 			{
 
 				try{
+
 					grid.tile(i,j).setTextures(lookup[r.nextInt(3)]);
 				}
 				catch (Exception e)
 				{
 //					e.getStackTrace();
-					System.out.println("TerrainMaker.random texture set error");
+					System.out.println("TerrainMaker texture set error");
 				}
 			}
 		}
 		return grid;
 	}
-
-//	public Grid generateTestTerrain()
-//	{
-//		for (int i = 0; i < 4; i++)
-//		{
-//			grid.tile(i,i).texture=textures.sand;
-//		}
-//		return null;
-//	}
 
 	class Textures
 	{

@@ -2,6 +2,7 @@ package Terrain;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
 
 public class Tile
 {
@@ -51,7 +52,8 @@ public class Tile
 	public Image getTexture()
 	{
 		//TODO change images depending on state
-		return texture[0];
+		Random r=new Random();
+		return texture[r.nextInt(texture.length)];
 	}
 
 	public void setTextures(Image[] texture)

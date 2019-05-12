@@ -72,7 +72,7 @@ public class Main
 
 		frame.setVisible(true);
 //		paintGrid(imgG);
-		grid= new TerrainMaker(gridWidth, gridHeight, gridSize).generateRandomTerrain();
+		grid= new TerrainMaker(gridWidth, gridHeight, gridSize).noiseBased(8);
 
 		grid.draw(imgG);
 		frame.repaint();
