@@ -215,6 +215,8 @@ public class TerrainMaker
 			try
 			{
 				grass = new Image[]{
+						new ImageIcon(getClass().getClassLoader().getResource("terrain/grass0.png")).getImage(),
+						new ImageIcon(getClass().getClassLoader().getResource("terrain/grass1.png")).getImage(),
 						new ImageIcon(getClass().getClassLoader().getResource("terrain/grass1.png")).getImage(),
 						new ImageIcon(getClass().getClassLoader().getResource("terrain/grass2.png")).getImage(),
 						new ImageIcon(getClass().getClassLoader().getResource("terrain/grass3.png")).getImage(),
