@@ -1,130 +1,171 @@
-
-import Terrain.Grid;
-import Terrain.TerrainMaker;
-
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.util.Random;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.*;
-
-/*
-  Main To Do List (TODO)
-	terrain
-	animals
-	game turns system
-
-
-
- */
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 
 public class Main
 {
 
-	protected int gridHeight=20;    //vertical (y) count
-	protected int gridWidth=30;    //horizontal (x) count
-	protected int gridSize=40;
-
-
-	protected JFrame frame;
-	protected JPanel panel;
-	protected BufferedImage img;
-	protected Graphics imgG;
-	protected KeyListener keyListener;
-	protected TerrainMaker terrainMaker;
-	Grid grid;
+	private JFrame frame;
+	private JPanel settings;
+	private Game game;
+	private Timer timer;
+	private Boolean isPaused=true;
 
 	public Main()
 	{
-
-		//Prepare framebuffer
-		img=new BufferedImage(gridSize*gridWidth,gridSize*gridHeight, BufferedImage.TYPE_INT_ARGB);
-		imgG=img.getGraphics();
-
-		terrainMaker =  new TerrainMaker(gridWidth, gridHeight, gridSize);
-
-		panel = new JPanel()
-		{
-			//Woah, lovely way to override!
+		timer = new Timer();
+		TimerTask timerTask = new TimerTask() {
 			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				// Creating a copy of the Graphics
-				// so any reconfiguration we do on
-				// it doesn't interfere with what
-				// Swing is doing.
-				Graphics2D g2 = (Graphics2D) g.create();
-				float scale=Math.min((float)getParent().getWidth()/gridWidth,(float)getParent().getHeight()/gridHeight)/gridSize;
-				int w= (int) (img.getWidth()*scale),
-						h= (int) (img.getHeight()*scale);
-				g2.drawImage(img, 0, 0, w,h, null);
-				g2.dispose();
-			}
-			@Override
-			public Dimension getPreferredSize() {
-				return new Dimension(img.getWidth(), img.getHeight());
-			}
-
-		};
-		//TODO: frame double buffering
-
-		keyListener= new KeyListener() {
-			@Override
-			public void keyTyped(KeyEvent e)
+			public void run()
 			{
-
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e)
-			{
-//				System.out.println(e.getKeyCode());
-				switch (e.getKeyCode())
-				{
-					case 32:    //space
-						terrainMaker.setRandomSeed();
-						break;
-					case 38:    //up
-					case 40:    //down
-						terrainMaker.noiseOffset.modifyY(e.getKeyCode()-39 );
-						break;
-					case 37:
-					case 39:
-						terrainMaker.noiseOffset.modifyX(e.getKeyCode()-38);
-						break;
-				}
-				grid = terrainMaker.noiseBased(8);
-				grid.draw(imgG);
+				if(!isPaused)
+					game.process();
+				game.display();
 				frame.repaint();
-
-
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e)
-			{
-//
-
 			}
 		};
+
+		game = new Game();
 
 		frame = new JFrame();
-		frame.add(panel);
-		frame.addKeyListener(keyListener);
+		frame.setLayout(new GridBagLayout());
+
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill=GridBagConstraints.HORIZONTAL;
+		c.gridx=0;
+		c.gridy=0;
+		c.gridheight=GridBagConstraints.PAGE_END;
+		frame.add(game.getPanel(),c);
+
+		/*
+		 *  SETTINGS PANEL
+		 */
+
+		c.gridx=1;
+		c.gridheight=1;
+		JButton generate = new JButton("Generuj nową symulację");
+		generate.addActionListener(new Action() {
+			@Override
+			public Object getValue(String key)
+			{
+				return null;
+			}
+
+			@Override
+			public void putValue(String key, Object value)
+			{
+
+			}
+
+			@Override
+			public void setEnabled(boolean b)
+			{
+
+			}
+
+			@Override
+			public boolean isEnabled()
+			{
+				return false;
+			}
+
+			@Override
+			public void addPropertyChangeListener(PropertyChangeListener listener)
+			{
+
+			}
+
+			@Override
+			public void removePropertyChangeListener(PropertyChangeListener listener)
+			{
+
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				game.newTerrain();
+			}
+		});
+		frame.add(generate,c);
+
+		c.gridy=1;
+		JButton pause = new JButton("Start");
+		pause.addActionListener(new Action() {
+			@Override
+			public Object getValue(String key)
+			{
+				return null;
+			}
+
+			@Override
+			public void putValue(String key, Object value)
+			{
+
+			}
+
+			@Override
+			public void setEnabled(boolean b)
+			{
+
+			}
+
+			@Override
+			public boolean isEnabled()
+			{
+				return false;
+			}
+
+			@Override
+			public void addPropertyChangeListener(PropertyChangeListener listener)
+			{
+
+			}
+
+			@Override
+			public void removePropertyChangeListener(PropertyChangeListener listener)
+			{
+
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+
+				isPaused=!isPaused;
+					pause.setText(isPaused?"Wznów":"Pauza");
+			}
+		});
+		frame.add(pause,c);
+
+//		c.gridy=2;
+//		JSlider tps = new JSlider();
+//		tps.setMaximum(5000);
+//		tps.setMinimum(1000/60);
+//		tps.addChangeListener(new ChangeListener() {
+//			@Override
+//			public void stateChanged(ChangeEvent e)
+//			{
+//				timer.cancel();
+//				timer.scheduleAtFixedRate(timerTask,0,tps.getValue());
+//			}
+//		});
+//		frame.add(tps,c);
+
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setTitle("Symulator zabijania zwierzat");
+		frame.setTitle("Symulator przetrwania zwierzat");
 		frame.setLocationByPlatform(true);
 		frame.pack();
-
 		frame.setVisible(true);
-//		paintGrid(imgG);
-		grid= terrainMaker.setRandomSeed().noiseBased(8);
 
-		grid.draw(imgG);
-		frame.repaint();
-
+		//Probably the worst way to do this.
+		timer.scheduleAtFixedRate(timerTask,0,1000/1);
 
 
 	}

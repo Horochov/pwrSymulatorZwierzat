@@ -55,6 +55,17 @@ public class Grid
 		}
 	}
 
+	public void process()
+	{
+		for (int i = 0; i < width; i++)
+		{
+			for (int j = 0; j < height; j++)
+			{
+				grid[i][j].process();
+			}
+		}
+	}
+
 	public int getWidth()
 	{
 		return width;

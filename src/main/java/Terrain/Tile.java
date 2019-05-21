@@ -2,35 +2,37 @@ package Terrain;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class Tile
 {
-	Boolean accessible;
-	public Image[] texture;
+	private Boolean accessible;
+	private Image texture;
 	Resource grass;
 	Resource corpse;
+//	Animal animal;
 
-	public Tile(Image[] textures, Boolean isAccessible, Resource grass, Resource corpse)
+	public Tile(Image texture, Boolean isAccessible, Resource grass, Resource corpse)
 	{
-		this.texture=textures;
+		this.texture=texture;
 		this.accessible=isAccessible;
 		this.grass=grass;
 		this.corpse=corpse;
 	}
 
-	public Tile(Image[] textures, Boolean isAccessible)
+	public Tile(Image texture, Boolean isAccessible)
 	{
 
-		this.texture=textures;
+		this.texture=texture;
 		this.accessible=isAccessible;
 		this.grass=null;
 		this.corpse=null;
 	}
 
-	public Tile(Image[] textures)
+	public Tile(Image texture)
 	{
-		this.texture=textures;
+		this.texture=texture;
 		this.accessible=true;
 		this.grass=null;
 		this.corpse=null;
@@ -44,19 +46,87 @@ public class Tile
 		this.corpse=null;
 	}
 
+	public void setAccessible(Boolean accessible)
+	{
+		this.accessible = accessible;
+	}
+
+	public Boolean isAccessible()
+	{
+		return accessible;
+	}
+
+	public void setCorpse(Resource corpse)
+	{
+		this.corpse = corpse;
+	}
+
+	public void setGrass(Resource grass)
+	{
+		this.grass = grass;
+	}
+
+	public Resource getCorpse()
+	{
+		return corpse;
+	}
+
+	public Resource getGrass()
+	{
+		return grass;
+	}
+
 	public void process()
 	{
+		try
+		{
+			corpse.process();
+		}
+		catch (NullPointerException e)
+		{
+
+		}
+		try
+		{
+			grass.process();
+		}
+		catch (NullPointerException e)
+		{
+
+		}
+
 
 	}
 
 	public Image getTexture()
 	{
-		//TODO change images depending on state
-		Random r=new Random();
-		return texture[r.nextInt(texture.length)];
+		BufferedImage rsrc= new BufferedImage(40,40, BufferedImage.TYPE_INT_ARGB);
+		Graphics g=rsrc.getGraphics();
+		g.drawImage(this.texture,0,0,40,40,null);
+		boolean drawn=false;
+		if(corpse!=null)
+		{
+			if (corpse.isAnyResource())
+			{
+				g.drawImage(corpse.getTexture(), 40, 40, null);
+				drawn = true;
+			}
+		}
+		else if((!drawn)&&grass!=null)
+		{
+			if (grass.isAnyResource())
+			{
+				g.drawImage(grass.getTexture(),0,0, 40, 40, null);
+				drawn = true;
+			}
+		}
+//		if(animal!=null)
+//			g.drawImage(animal.getTexture(),40,40,null);
+
+		return rsrc;
 	}
 
-	public void setTextures(Image[] texture)
+	public void setTexture(Image texture)
 	{
 		this.texture = texture;
 	}

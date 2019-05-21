@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
 
-public class TerrainMaker
+public class GridMaker
 {
 	public Textures textures;
 	private Grid grid;
@@ -74,14 +74,14 @@ public class TerrainMaker
 		}
 	}
 
-	public TerrainMaker(int width, int height, int size)
+	public GridMaker(int width, int height, int size)
 	{
 		grid = new Grid(width,height,size);
 		textures = new Textures();
 		seed=0;
 		noiseOffset = new Offset();
 	}
-	public TerrainMaker(int width, int height, int size, long seed)
+	public GridMaker(int width, int height, int size, long seed)
 	{
 		grid = new Grid(width,height,size);
 		textures = new Textures();
@@ -98,13 +98,13 @@ public class TerrainMaker
 
 
 
-	public TerrainMaker setSeed(long seed)
+	public GridMaker setSeed(long seed)
 	{
 		this.seed = seed;
 		return this;
 	}
 
-	public TerrainMaker setRandomSeed()
+	public GridMaker setRandomSeed()
 	{
 		Random r = new Random();
 		seed = r.nextLong();
@@ -119,23 +119,30 @@ public class TerrainMaker
 
 	public Grid noiseBased(int divider, long seed)
 	{
+		grid = new Grid(grid.getWidth(),grid.getHeight(),grid.getSize());
 //		System.out.println("Map seed: "+seed);
 		OpenSimplexNoise noise = new OpenSimplexNoise(seed);
-
+		Random r = new Random();
 		for (int i = 0; i < grid.getWidth(); i++)
 			for (int j = 0; j < grid.getHeight(); j++)
 				try{
 					double rand = Math.abs(noise.eval((double)(i+noiseOffset.getX())/divider,(double)(j+noiseOffset.getY())/divider)) ;
 					if(rand>0.6)
-						grid.tile(i,j).setTextures(textures.water);
+						grid.tile(i,j).setTexture(textures.getWater());
 					else if(rand>0.5)
-						grid.tile(i,j).setTextures(textures.sand);
+						grid.tile(i,j).setTexture(textures.getSand());
 					else
-						grid.tile(i,j).setTextures(textures.grass);
+					{
+						grid.tile(i, j).setTexture(textures.getDirt());
+						int grassCnt=r.nextInt(2000)-1000;
+						if(grassCnt>0)
+							grid.tile(i,j).setGrass(new Resource(textures.getGrass(),0,1000,1, grassCnt));
+
+					}
 				}
 				catch (Exception e)
 				{
-					System.out.println("TerrainMaker texture set error: "+e.getCause());
+					System.out.println("GridMaker texture set error: "+e.getCause());
 				}
 
 		return grid;
@@ -149,40 +156,14 @@ public class TerrainMaker
 
 
 
-	public Grid randomBased()
-	{
-		Image[][] lookup=
-				{
-						textures.sand,
-						textures.water,
-						textures.grass
-				};
-		Random r=new Random();
-		for (int i = 0; i < grid.getWidth(); i++)
-		{
-			for (int j = 0; j < grid.getHeight(); j++)
-			{
-
-				try{
-
-					grid.tile(i,j).setTextures(lookup[r.nextInt(3)]);
-				}
-				catch (Exception e)
-				{
-//					e.getStackTrace();
-					System.out.println("TerrainMaker texture set error");
-				}
-			}
-		}
-		return grid;
-	}
-
 	class Textures
 	{
 		//oh god that total wasted ammount of memory where texture count == 0...
-		public Image[] grass;
-		public Image[] sand;
-		public Image[] water;
+		private Image[] grass;
+		private Image[] corpse;
+		private Image sand;
+		private Image water;
+		private Image dirt;
 
 		public Textures()
 		{
@@ -190,33 +171,37 @@ public class TerrainMaker
 			//water
 			try
 			{
-				water = new Image[]{
-						new ImageIcon(getClass().getClassLoader().getResource("terrain/water.png")).getImage(),
-				};
+				water = new ImageIcon(getClass().getClassLoader().getResource("terrain/water.png")).getImage();
 			}
 			catch (Exception e)
 			{
-				System.out.println("Failed to load water texture(s)");
+				System.out.println("Failed to load water texture");
 			}
 
 			//sand
 			try
 			{
-				sand = new Image[]{
-						new ImageIcon(getClass().getClassLoader().getResource("terrain/sand.png")).getImage(),
-				};
+				sand = new ImageIcon(getClass().getClassLoader().getResource("terrain/sand.png")).getImage();
 			}
 			catch (Exception e)
 			{
-				System.out.println("Failed to load sand texture(s)");
+				System.out.println("Failed to load sand texture");
 			}
 
-			//sand
+			//dirt
+			try
+			{
+				dirt = new ImageIcon(getClass().getClassLoader().getResource("terrain/grass0.png")).getImage();
+			}
+			catch (Exception e)
+			{
+				System.out.println("Failed to load dirt texture");
+			}
+
+			//grass
 			try
 			{
 				grass = new Image[]{
-						new ImageIcon(getClass().getClassLoader().getResource("terrain/grass0.png")).getImage(),
-						new ImageIcon(getClass().getClassLoader().getResource("terrain/grass1.png")).getImage(),
 						new ImageIcon(getClass().getClassLoader().getResource("terrain/grass1.png")).getImage(),
 						new ImageIcon(getClass().getClassLoader().getResource("terrain/grass2.png")).getImage(),
 						new ImageIcon(getClass().getClassLoader().getResource("terrain/grass3.png")).getImage(),
@@ -224,9 +209,50 @@ public class TerrainMaker
 			}
 			catch (Exception e)
 			{
-				System.out.println("Failed to load sand texture(s)");
+				System.out.println("Failed to load grass texture(s)");
+			}
+
+			//corpse
+			try
+			{
+				corpse = new Image[]{
+						null
+//						new ImageIcon(getClass().getClassLoader().getResource("terrain/grass1.png")).getImage(),
+//						new ImageIcon(getClass().getClassLoader().getResource("terrain/grass1.png")).getImage(),
+//						new ImageIcon(getClass().getClassLoader().getResource("terrain/grass2.png")).getImage(),
+//						new ImageIcon(getClass().getClassLoader().getResource("terrain/grass3.png")).getImage(),
+						};
+			}
+			catch (Exception e)
+			{
+				System.out.println("Failed to load grass texture(s)");
 			}
 		}
 
+		public Image getDirt()
+		{
+			return dirt;
+		}
+
+		public Image getSand()
+		{
+			return sand;
+		}
+
+		public Image getWater()
+		{
+			return water;
+		}
+
+		public Image[] getCorpse()
+		{
+			return corpse;
+		}
+
+		public Image[] getGrass()
+		{
+			return grass;
+		}
 	}
+
 }
