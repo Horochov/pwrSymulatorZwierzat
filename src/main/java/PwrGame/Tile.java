@@ -1,9 +1,7 @@
-package Terrain;
+package PwrGame;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Random;
 
 public class Tile
 {

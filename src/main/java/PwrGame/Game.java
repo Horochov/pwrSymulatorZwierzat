@@ -1,21 +1,22 @@
-import Terrain.Grid;
-import Terrain.GridMaker;
+package PwrGame;
+
+import PwrGame.GridMaker.GridMaker;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
 public class Game
 {
-	private int gridHeight=20;    //vertical (y) count
-	private int gridWidth=30;    //horizontal (x) count
-	private int gridSize=40;
+	private final int gridHeight=20;    //vertical (y) count
+	private final int gridWidth=30;    //horizontal (x) count
+	private final int gridSize=40;
+
+	private Boolean isPaused=true;
 
 	protected JPanel panel;
 	protected BufferedImage img;
 	protected Graphics imgG;
-	protected KeyListener keyListener;
 	protected GridMaker gridMaker;
 	Grid grid;
 
@@ -66,6 +67,16 @@ public class Game
 	{
 		grid = gridMaker.setRandomSeed().noiseBased(8);
 
+	}
+
+	public void setPaused(Boolean paused)
+	{
+		isPaused = paused;
+	}
+
+	public Boolean isPaused()
+	{
+		return isPaused;
 	}
 
 	public void process()

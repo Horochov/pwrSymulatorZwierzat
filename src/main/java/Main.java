@@ -1,21 +1,19 @@
+import PwrGame.Game;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 
 public class Main
 {
 
 	private JFrame frame;
-	private JPanel settings;
 	private Game game;
 	private Timer timer;
-	private Boolean isPaused=true;
+
 
 	public Main()
 	{
@@ -24,7 +22,7 @@ public class Main
 			@Override
 			public void run()
 			{
-				if(!isPaused)
+				if(!game.isPaused())
 					game.process();
 				game.display();
 				frame.repaint();
@@ -138,8 +136,8 @@ public class Main
 			public void actionPerformed(ActionEvent e)
 			{
 
-				isPaused=!isPaused;
-					pause.setText(isPaused?"Wznów":"Pauza");
+				game.setPaused(!game.isPaused());
+					pause.setText(game.isPaused()?"Wznów":"Pauza");
 			}
 		});
 		frame.add(pause,c);
@@ -172,6 +170,5 @@ public class Main
 	public static void main(String[] args)
 	{
 		new Main();
-
 	}
 }

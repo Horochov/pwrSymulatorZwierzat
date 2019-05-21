@@ -1,4 +1,4 @@
-package Terrain;
+package PwrGame;
 
 import java.awt.*;
 import java.util.Random;
@@ -31,34 +31,34 @@ public class Resource
 		this.count=r.nextInt(maxCount-minCount+1)+minCount;
 	}
 
-	public int getCount()
+	protected int getCount()
 	{
 		return count;
 	}
 
-	public void setCount(int count)
+	protected void setCount(int count)
 	{
 		this.count = count>maxCount?maxCount:count;
 	}
 
-	public int getMaxCount()
+	protected int getMaxCount()
 	{
 		return maxCount;
 	}
 
-	public void setMaxCount(int maxCount)
+	protected void setMaxCount(int maxCount)
 	{
 		this.maxCount = maxCount;
 		if(count>maxCount)
 			count=maxCount;
 	}
 
-	public int getMinCount()
+	protected int getMinCount()
 	{
 		return minCount;
 	}
 
-	public void setMinCount(int minCount)
+	protected void setMinCount(int minCount)
 	{
 		this.minCount = minCount;
 		if(count<minCount)
@@ -66,22 +66,22 @@ public class Resource
 
 	}
 
-	public int getRatio()
+	protected int getRatio()
 	{
 		return ratio;
 	}
 
-	public void setRatio(int ratio)
+	protected void setRatio(int ratio)
 	{
 		this.ratio = ratio;
 	}
 
-	public void setTextures(Image[] textures)
+	protected void setTextures(Image[] textures)
 	{
 		this.textures = textures;
 	}
 
-	public Image getTexture()
+	protected Image getTexture()
 	{
 		if(textures.length<=0)
 		{
@@ -91,12 +91,12 @@ public class Resource
 		return textures[(textures.length)*(count-1)/maxCount];
 	}
 
-	public void process()
+	protected void process()
 	{
 		setCount(getCount()+getRatio());
 	}
 
-	public boolean isAnyResource()
+	protected boolean isAnyResource()
 	{
 		return (count-minCount)>0;
 	}
