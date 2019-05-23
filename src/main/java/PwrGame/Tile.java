@@ -1,5 +1,7 @@
 package PwrGame;
 
+import PwrGame.GridMaker.Hare;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -9,7 +11,7 @@ public class Tile
 	private Image texture;
 	Resource grass;
 	Resource corpse;
-//	Animal animal;
+	Animal animal;
 
 	public Tile(Image texture, Boolean isAccessible, Resource grass, Resource corpse)
 	{
@@ -92,7 +94,14 @@ public class Tile
 		{
 
 		}
-
+//        try
+//        {
+//            animal.process();
+//        }
+//        catch (NullPointerException e)
+//        {
+//
+//        }
 
 	}
 
@@ -118,8 +127,8 @@ public class Tile
 				drawn = true;
 			}
 		}
-//		if(animal!=null)
-//			g.drawImage(animal.getTexture(),40,40,null);
+		if(animal!=null)
+			g.drawImage(animal.getTexture(),0,0,40,40,null);
 
 		return rsrc;
 	}
@@ -129,4 +138,11 @@ public class Tile
 		this.texture = texture;
 	}
 
+    public void setAnimal(Animal animal) {
+        this.animal = animal;
+    }
+
+    public Animal getAnimal() {
+        return animal;
+    }
 }

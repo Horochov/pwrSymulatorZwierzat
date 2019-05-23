@@ -78,6 +78,21 @@ public class GridMaker
 						if(grassCnt>0)
 							grid.tile(i,j).setGrass(new Resource(textures.getGrass(), 0, 1000, 1, grassCnt));
 
+						//#Todo: proper animal placement
+						if(r.nextInt(100)>90)
+						{
+							int a = r.nextInt(84);
+							int x = i;
+							int y = j;
+							grid.tile(i, j).setAnimal(new Hare(grid, 10, a, 5, 0, 100, x, y));
+						}
+						if(r.nextInt(100)>90)
+						{
+							int a = r.nextInt(96);
+							int x = i;
+							int y = j;
+							grid.tile(i, j).setAnimal(new Wolf(grid, 30, a, 3, 2, 100, x, y));
+						}
 					}
 				}
 				catch (Exception e)
