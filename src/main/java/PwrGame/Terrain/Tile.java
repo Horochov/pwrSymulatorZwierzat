@@ -20,16 +20,16 @@ public class Tile
 
 	private Boolean accessible;
 	private Image textures[];
-	Position position;
-	byte size;
+	private Position position;
+	private byte size;
 
 	ResourceType resType;
-	byte ticksPerGrowth;
-	byte maxCount;
+	private byte maxCount;
 	static byte minCount;
+	private byte count;
+	private byte ticksPerGrowth;
 	private byte tickCounter=0;
-	byte count;
-	byte addPerTick;
+	private byte addPerTick;
 
 
 
@@ -105,17 +105,17 @@ public class Tile
 		g.drawImage(current,position.getX(),position.getY(),size,size,null);
 	}
 
-	public ResourceType getResType()
+	public ResourceType getResourceType()
 	{
 		return resType;
 	}
 
-	public byte getResCount()
+	public byte getResourceCount()
 	{
 		return count;
 	}
 
-	public boolean consumeRes()
+	public boolean consumeResource()
 	{
 	//returns true if operation succeeded
 		if(count>minCount)
