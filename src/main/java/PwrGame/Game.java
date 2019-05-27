@@ -105,9 +105,41 @@ public class Game
 				else
 				{
 					tiles.add(new Tile(textures.getGrass(), true, new Position(i * gridSize, j * gridSize), gridSize,
-					                   Tile.ResourceType.grass, (byte)r.nextInt(3), (byte)textures.getGrass().length, (byte) 100, (byte) 1));
+					                   Tile.ResourceType.grass, (byte)(r.nextInt(textures.getGrass().length)), (byte)(textures.getGrass().length-1), (byte) 100, (byte) 1));
 				}
 			}
+	}
+
+	private Position accessibleTile()
+	{
+		Random r = new Random();
+		Position pos = new Position(r.nextInt(gridWidth)*gridSize,r.nextInt(gridHeight)*gridSize);
+		for (int t = 0; t < 20; t++)
+		{
+			for (int j = 0; j < animals.size(); j++)
+			{
+				if (pos.equals(animals.elementAt(j).getPosition()))
+				{
+					//generate new pos and start searching again
+					//TODO: handle animal overflow (more animals than grid allows)
+					pos = new Position(r.nextInt(gridWidth) * gridSize, r.nextInt(gridHeight) * gridSize);
+					j = 0;
+				}
+			}
+			for (int j = 0; j < tiles.size(); j++)
+			{
+				if (pos.equals(tiles.elementAt(j).getPosition()))
+				{
+					if(tiles.elementAt(j).isAccessible())
+						return pos;
+					//generate new pos and start searching again
+					pos = new Position(r.nextInt(gridWidth) * gridSize, r.nextInt(gridHeight) * gridSize);
+					j = 0;
+				}
+			}
+		}
+		System.out.println("Search for accessible tile: exceeded 10 tries");
+		return pos;
 	}
 	private void prepareAnimals(byte wolfCnt, byte hareCnt)
 	{
@@ -118,40 +150,16 @@ public class Game
 
 			for (int i = 0; i < wolfCnt; i++)
 			{
-				//check if another animal isn't there
-				Position pos = new Position(r.nextInt(gridWidth)*gridSize,r.nextInt(gridHeight)*gridSize);
-				for (int j = 0; j < animals.size(); j++)
-				{
-					if(pos.equals(animals.elementAt(j).getPosition()))
-					{
-						//generate new pos and start searching again
-						//TODO: handle animal overflow (more animals than grid allows)
-						pos = new Position(r.nextInt(gridWidth)*gridSize,r.nextInt(gridHeight)*gridSize);
-						j=0;
-					}
-				}
 				animals.add(
-						//TODO: update constructor parameters
-						new Wolf(pos, gridSize, 10, r.nextInt(84), 5, 0, 100)
+						new Wolf(accessibleTile(), gridSize, 10, r.nextInt(84), 5, 0, 100)
 				);
 			}
 			for (int i = 0; i < hareCnt; i++)
 			{
 				//check if another animal isn't there
-				Position pos = new Position(r.nextInt(gridWidth)*gridSize,r.nextInt(gridHeight)*gridSize);
-				for (int j = 0; j < animals.size(); j++)
-				{
-					if(pos.equals(animals.elementAt(j).getPosition()))
-					{
-						//generate new pos and start searching again
-						//TODO: handle animal overflow (more animals than grid allows)
-						pos = new Position(r.nextInt(gridWidth)*gridSize,r.nextInt(gridHeight)*gridSize);
-						j=0;
-					}
-				}
 				animals.add(
 						//TODO: update constructor parameters
-						new Hare(pos,gridSize, 30, r.nextInt(96), 3, 2, 100)
+						new Hare(accessibleTile(),gridSize, 30, r.nextInt(96), 3, 2, 100)
 				);
 			}
 		}

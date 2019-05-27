@@ -94,8 +94,8 @@ public class Tile
 	public void display(Graphics g)
 	{
 		//select image to display and do it
-		Image current;
-		if(maxCount>0)
+		Image current=null;
+		if(maxCount!=0)
 		{
 			int idx = (textures.length - 1) * (count) / maxCount;
 			current = textures[idx];

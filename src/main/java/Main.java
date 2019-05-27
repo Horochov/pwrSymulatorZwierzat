@@ -88,6 +88,8 @@ public class Main
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				frame.remove(game.getPanel());
+
 				game = new Game((byte) 30,(byte) 20,(byte) 40,(byte) 10,(byte) 10);
 				c.fill=GridBagConstraints.HORIZONTAL;
 				c.gridx=0;
@@ -173,7 +175,7 @@ public class Main
 		frame.setVisible(true);
 
 		//Probably the worst way to do this.
-		timer.scheduleAtFixedRate(timerTask,0,1000/1);
+		timer.scheduleAtFixedRate(timerTask,0,1000/10);
 
 
 	}
