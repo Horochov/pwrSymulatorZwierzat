@@ -1,4 +1,4 @@
-package PwrGame.GridMaker;
+package PwrGame.Animals;
 
 public class AnimalStats
 {

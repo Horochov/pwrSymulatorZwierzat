@@ -13,7 +13,7 @@ public class Main
 	private JFrame frame;
 	private Game game;
 	private Timer timer;
-
+	private boolean isPaused=true;
 
 	public Main()
 	{
@@ -22,14 +22,14 @@ public class Main
 			@Override
 			public void run()
 			{
-				if(!game.isPaused())
+				if(!isPaused)
 					game.process();
 				game.display();
 				frame.repaint();
 			}
 		};
 
-		game = new Game();
+		game = new Game((byte) 30,(byte) 20,(byte) 40,(byte) 10,(byte) 10);
 
 		frame = new JFrame();
 		frame.setLayout(new GridBagLayout());
@@ -88,9 +88,19 @@ public class Main
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				game.newTerrain();
+				game = new Game((byte) 30,(byte) 20,(byte) 40,(byte) 10,(byte) 10);
+				c.fill=GridBagConstraints.HORIZONTAL;
+				c.gridx=0;
+				c.gridy=0;
+				c.gridheight=GridBagConstraints.PAGE_END;
+
+				frame.add(game.getPanel(),c);
+				frame.pack();
+				frame.repaint();
 			}
 		});
+		c.gridx=1;
+		c.gridheight=1;
 		frame.add(generate,c);
 
 		c.gridy=1;
@@ -136,8 +146,8 @@ public class Main
 			public void actionPerformed(ActionEvent e)
 			{
 
-				game.setPaused(!game.isPaused());
-					pause.setText(game.isPaused()?"Wznów":"Pauza");
+				isPaused=!isPaused;
+				pause.setText(isPaused?"Wznów":"Pauza");
 			}
 		});
 		frame.add(pause,c);

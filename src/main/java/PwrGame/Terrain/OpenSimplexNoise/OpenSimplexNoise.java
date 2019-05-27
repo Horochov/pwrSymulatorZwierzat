@@ -1,4 +1,4 @@
-package OpenSimplexNoise;/*
+package PwrGame.Terrain.OpenSimplexNoise;/*
  * OpenSimplex Noise in Java.
  * by Kurt Spencer
  * 

@@ -5,7 +5,7 @@ package OpenSimplexNoise;/*
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.*;
-import OpenSimplexNoise.OpenSimplexNoise;
+import PwrGame.Terrain.OpenSimplexNoise.OpenSimplexNoise;
 
 public class OpenSimplexNoiseTest
 {
