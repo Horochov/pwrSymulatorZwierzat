@@ -11,7 +11,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
-import java.util.Timer;
 import java.util.Vector;
 
 public class Game
@@ -37,7 +36,7 @@ public class Game
 	private Vector<Tile> tiles;
 
 
-	public Game(byte gridWidth, byte gridHeight, byte gridSize, byte wolfCount, byte hareCount )
+	public Game(byte gridWidth, byte gridHeight, byte gridSize, int wolfCount, int hareCount )
 	{
 		animals = new Vector<>(255);
 		tiles=new Vector<>(255);
@@ -141,7 +140,7 @@ public class Game
 		System.out.println("Search for accessible tile: exceeded 10 tries");
 		return pos;
 	}
-	private void prepareAnimals(byte wolfCnt, byte hareCnt)
+	private void prepareAnimals(int wolfCnt, int hareCnt)
 	{
 		//#Todo: proper animal placement (groups?)
 		try

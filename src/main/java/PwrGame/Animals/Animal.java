@@ -2,9 +2,8 @@ package PwrGame.Animals;
 
 import PwrGame.Position;
 
-import java.util.Random;
-
 import java.awt.*;
+import java.util.Random;
 
 public abstract class Animal implements IAnimal
 {

@@ -1,6 +1,7 @@
 package PwrGame.Animals;
 
 import PwrGame.Position;
+
 import javax.swing.*;
 import java.awt.*;
 

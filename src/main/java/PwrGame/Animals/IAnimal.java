@@ -1,7 +1,5 @@
 package PwrGame.Animals;
 
-import java.awt.*;
-
 public interface IAnimal
 {
     //public Image getTexture();

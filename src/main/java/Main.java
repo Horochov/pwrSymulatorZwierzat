@@ -1,39 +1,36 @@
 import PwrGame.Game;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.swing.*;
 
 public class Main
 {
 
-	private JFrame frame;
 	private Game game;
 	private Timer timer;
+	private int tps=10;
 	private boolean isPaused=true;
+
+	private JFrame frame;
+	private JButton  bGenerate;
+	private JButton bPause;
+	private JFormattedTextField tfWolfCnt;
+	private JFormattedTextField tfhareCnt;
 
 	public Main()
 	{
-		timer = new Timer();
-		TimerTask timerTask = new TimerTask() {
-			@Override
-			public void run()
-			{
-				if(!isPaused)
-					game.process();
-				game.display();
-				frame.repaint();
-			}
-		};
 
-		game = new Game((byte) 30,(byte) 20,(byte) 40,(byte) 10,(byte) 10);
+
 
 		frame = new JFrame();
 		frame.setLayout(new GridBagLayout());
 
+		//pre-init game window
+		game = new Game((byte) 30,(byte) 20,(byte) 40, 10, 10);
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill=GridBagConstraints.HORIZONTAL;
 		c.gridx=0;
@@ -45,10 +42,9 @@ public class Main
 		 *  SETTINGS PANEL
 		 */
 
-		c.gridx=1;
-		c.gridheight=1;
-		JButton generate = new JButton("Generuj nową symulację");
-		generate.addActionListener(new Action() {
+		//Prepare buttons & listeners
+		bGenerate = new JButton("Generuj nową mapę");
+		bGenerate.addActionListener(new Action() {
 			@Override
 			public Object getValue(String key)
 			{
@@ -90,24 +86,35 @@ public class Main
 			{
 				frame.remove(game.getPanel());
 
-				game = new Game((byte) 30,(byte) 20,(byte) 40,(byte) 10,(byte) 10);
+				//filter textFields
+				try {
+					Integer.parseInt(tfWolfCnt.getText());
+				} catch (NumberFormatException ex) {
+					tfWolfCnt.setValue(10);
+				}
+				try {
+					Integer.parseInt(tfhareCnt.getText());
+				} catch (NumberFormatException ex) {
+					tfhareCnt.setValue(10);
+				}
+
+				game = new Game((byte) 30,(byte) 20,(byte) 40,Integer.parseInt(tfWolfCnt.getText()),Integer.parseInt(tfhareCnt.getText()));
+				GridBagConstraints c = new GridBagConstraints();
 				c.fill=GridBagConstraints.HORIZONTAL;
 				c.gridx=0;
 				c.gridy=0;
 				c.gridheight=GridBagConstraints.PAGE_END;
 
 				frame.add(game.getPanel(),c);
+
+				bPause.setText("Start");
+				isPaused=true;
 				frame.pack();
 				frame.repaint();
 			}
 		});
-		c.gridx=1;
-		c.gridheight=1;
-		frame.add(generate,c);
-
-		c.gridy=1;
-		JButton pause = new JButton("Start");
-		pause.addActionListener(new Action() {
+		bPause = new JButton("Start");
+		bPause.addActionListener(new Action() {
 			@Override
 			public Object getValue(String key)
 			{
@@ -149,35 +156,65 @@ public class Main
 			{
 
 				isPaused=!isPaused;
-				pause.setText(isPaused?"Wznów":"Pauza");
+				bPause.setText(isPaused?"Wznów":"Pauza");
 			}
 		});
-		frame.add(pause,c);
 
-//		c.gridy=2;
-//		JSlider tps = new JSlider();
-//		tps.setMaximum(5000);
-//		tps.setMinimum(1000/60);
-//		tps.addChangeListener(new ChangeListener() {
-//			@Override
-//			public void stateChanged(ChangeEvent e)
-//			{
-//				timer.cancel();
-//				timer.scheduleAtFixedRate(timerTask,0,tps.getValue());
-//			}
-//		});
-//		frame.add(tps,c);
+		//Prepare labels and textfields
+		JLabel lWolfCnt = new JLabel("Ilość wilków");
+		JLabel lHareCnt = new JLabel("Ilość zajęcy");
+		tfWolfCnt = new JFormattedTextField();
+		tfWolfCnt.setValue(10);
+		tfhareCnt = new JFormattedTextField();
+		tfhareCnt.setValue(10);
+		//Manage menu layout
+		c = new GridBagConstraints();
+		c.fill=GridBagConstraints.HORIZONTAL;
+		c.gridx=1;
+		c.gridheight=1;
 
+		c.gridy=0;
+		frame.add(lWolfCnt,c);
+		c.gridx++;
+		frame.add(tfWolfCnt,c);
+		c.gridx--;
+
+		c.gridy++;
+		frame.add(lHareCnt,c);
+		c.gridx++;
+		frame.add(tfhareCnt,c);
+		c.gridx--;
+
+		c.gridwidth=2;
+		c.gridy++;
+		frame.add(bGenerate,c);
+//		frame.getRootPane().setDefaultButton(bGenerate);
+//		bGenerate.requestFocusInWindow();
+
+		c.gridy++;
+		frame.add(bPause,c);
+
+
+		//Finalize frame creation
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("Symulator przetrwania zwierzat");
 		frame.setLocationByPlatform(true);
 		frame.pack();
 		frame.setVisible(true);
 
-		//Probably the worst way to do this.
-		timer.scheduleAtFixedRate(timerTask,0,1000/10);
-
-
+		//Ticks timer
+		timer = new Timer();
+		TimerTask timerTask = new TimerTask() {
+			@Override
+			public void run()
+			{
+				if(!isPaused)
+					game.process();
+				game.display();
+				frame.repaint();
+			}
+		};
+		timer.scheduleAtFixedRate(timerTask,0,1000/tps);
 	}
 	public static void main(String[] args)
 	{
