@@ -7,4 +7,5 @@ public class AnimalStats
     protected int speed;
     protected int damage;
     protected int hunger;
+    protected int thirst;
 }

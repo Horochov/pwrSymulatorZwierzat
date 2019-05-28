@@ -3,6 +3,6 @@ package PwrGame.Animals;
 public interface IAnimal
 {
     //public Image getTexture();
-   // public boolean isAlive();
+    boolean isAlive();
    // public void process();
 }

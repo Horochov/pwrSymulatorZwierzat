@@ -23,6 +23,8 @@ public class Position
 	public int modifyX(int dx)
 	{
 		return posX+=dx;
+		//posX += dx;
+		//return posX;
 	}
 	public int modifyY(int dy)
 	{
@@ -77,4 +79,20 @@ public class Position
 	{
 		return ((pos.getX()==posX)&&(pos.getY()==posY));
 	}
+	public boolean equalsLeft(Position pos)
+    {
+        return ((pos.getY()==posY)&&(pos.getX()-40==posX));
+    }
+    public boolean equalsRight(Position pos)
+    {
+        return ((pos.getY()==posY)&&(pos.getX()+40==posX));
+    }
+    public boolean equalsUp(Position pos)
+    {
+        return ((pos.getY()-40==posY)&&(pos.getX()==posX));
+    }
+    public boolean equalsDown(Position pos)
+    {
+        return ((pos.getY()+40==posY)&&(pos.getX()==posX));
+    }
 }
