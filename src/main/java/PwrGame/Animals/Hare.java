@@ -19,15 +19,15 @@ public class Hare extends Animal
         try
         {
             textures = new Image[]{
-                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare.png")).getImage(),
-                    new ImageIcon(getClass().getClassLoader().getResource("animals/hare_lying.png")).getImage(),
-//                    new ImageIcon(getClass().getClassLoader().getResource("animals/hare_reverse.png")).getImage(),
-//                    new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving1.png")).getImage(),
-//                    new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving1_reverse.png")).getImage(),
-//                    new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving2.png")).getImage(),
-//                    new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving2_reverse.png")).getImage(),
-//                    new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving3.png")).getImage(),
-//                    new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving3_reverse.png")).getImage(),
+                        new ImageIcon(getClass().getClassLoader().getResource("animals/hare.png")).getImage(),
+                        new ImageIcon(getClass().getClassLoader().getResource("animals/hare_reverse.png")).getImage(),
+                        new ImageIcon(getClass().getClassLoader().getResource("animals/hare_lying.png")).getImage(),
+                        new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving1.png")).getImage(),
+                        new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving2.png")).getImage(),
+                        new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving3.png")).getImage(),
+                        new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving1_reverse.png")).getImage(),
+                        new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving2_reverse.png")).getImage(),
+                        new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving3_reverse.png")).getImage(),
 //                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_sleeping.png")).getImage(),
 //                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_eating1.png")).getImage(),
 //                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_eating1_reverse.png")).getImage(),
@@ -54,7 +54,7 @@ public class Hare extends Animal
         Image current;
         if(idling)
         {
-            current=textures[1];
+            current=textures[2];
         }
 //        else if(sleeping)
 //        {
@@ -64,6 +64,58 @@ public class Hare extends Animal
 //        {
 //            current = textures[3];
 //        }
+        else if(movement == 1)
+        {
+            current = textures[3];
+        }
+        else if(movement == 2)
+        {
+            current = textures[4];
+        }
+        else if(movement == 3)
+        {
+            current = textures[5];
+        }
+        else if(movement == 4)
+        {
+            current = textures[6];
+        }
+        else if(movement == 5)
+        {
+            current = textures[7];
+        }
+        else if(movement == 6)
+        {
+            current = textures[8];
+        }
+        else if(movement == 7)
+        {
+            current = textures[6];
+        }
+        else if(movement == 8)
+        {
+            current = textures[7];
+        }
+        else if(movement == 9)
+        {
+            current = textures[8];
+        }
+        else if(movement == 10)
+        {
+            current = textures[3];
+        }
+        else if(movement == 11)
+        {
+            current = textures[4];
+        }
+        else if(movement == 12)
+        {
+            current = textures[5];
+        }
+        else if(lookingRight)
+        {
+            current = textures[1];
+        }
         else
         {
             current=textures[0];
