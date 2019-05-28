@@ -68,7 +68,7 @@ public class Position
 		return posY;
 	}
 
-	public Position getPos()
+	public Position getCopy()
 	{
 		return new Position(this);
 	}
@@ -76,5 +76,13 @@ public class Position
 	public boolean equals(Position pos)
 	{
 		return ((pos.getX()==posX)&&(pos.getY()==posY));
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (! (obj instanceof Position ))
+			return false;
+		return (equals((Position) obj));
 	}
 }
