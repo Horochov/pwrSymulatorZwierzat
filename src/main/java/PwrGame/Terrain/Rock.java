@@ -16,11 +16,11 @@ public class Rock extends Tile
 		try
 		{
 			if (backgroundTile instanceof Grass)
-				textureBack= new ImageIcon(getClass().getClassLoader().getResource("terrain/grass0.png")).getImage();
+				textureBack= new ImageIcon(getClass().getClassLoader().getResource("terrain/backg/grass0.png")).getImage();
 			else
-				textureBack= new ImageIcon(getClass().getClassLoader().getResource("terrain/sand.png")).getImage();
+				textureBack= new ImageIcon(getClass().getClassLoader().getResource("terrain/backg/sand.png")).getImage();
 
-			texture = new  ImageIcon(getClass().getClassLoader().getResource("terrain/rock.png")).getImage();
+			texture = new  ImageIcon(getClass().getClassLoader().getResource("terrain/obstacle/rock.png")).getImage();
 		}
 		catch (Exception e)
 		{

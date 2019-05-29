@@ -221,10 +221,14 @@ public class Main
 		c.fill=GridBagConstraints.HORIZONTAL;
 		c.gridx=1;
 		c.gridheight=1;
+		c.insets.bottom=1;
 
 		c.gridy=0;
 
+		c.insets.left=2;
+		c.insets.right=2;
 		GridBagConstraints d = (GridBagConstraints)c.clone();
+		d.insets.left=0;
 		d.gridx++;
 
 		frame.add(lWolfCnt,c);
@@ -236,11 +240,12 @@ public class Main
 		d.insets.bottom=10;
 		frame.add(lHareCnt,c);
 		frame.add(tfHareCnt,d);
-		c.insets.bottom=0;
-		d.insets.bottom=0;
+		c.insets.bottom=1;
+		d.insets.bottom=1;
 
 		c.gridy++;
 		d = (GridBagConstraints)c.clone();
+		d.insets.left=0;
 		d.gridx++;
 		frame.add(lRockCnt,c);
 		frame.add(tfRockCnt,d);

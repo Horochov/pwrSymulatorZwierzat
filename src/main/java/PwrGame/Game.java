@@ -215,23 +215,33 @@ public class Game
 
 			for (int i = 0; i < wolfCnt; i++)
 			{
+				Position pos=unoccupiedTile();
+				if(pos==null)
+				{
+					System.out.println("Warning: Tried to place too many animals, ammount has been limited.");
+					return;
+				}
 				animals.add(
-						new Wolf(unoccupiedTile(), gridSize, 10, r.nextInt(84), 5, 0, 1000, 400)
+						new Wolf(pos, gridSize, 10, r.nextInt(84), 5, 0, 1000, 400)
 				);
 			}
 			for (int i = 0; i < hareCnt; i++)
 			{
-				//check if another animal isn't there
+				Position pos=unoccupiedTile();
+				if(pos==null)
+				{
+					System.out.println("Warning: Tried to place too many animals, ammount has been limited.");
+					return;
+				}
 				animals.add(
-						//TODO: update constructor parameters
-						new Hare(unoccupiedTile(),gridSize, 30, r.nextInt(96), 3, 5, 1000, 700)
+						new Hare(pos,gridSize, 30, r.nextInt(96), 3, 5, 1000, 700)
 				);
 			}
 		}
 		catch (Exception e)
 		{
-			System.out.println("Terrain texture set error: "+e.getCause());
-			System.exit(4);
+			System.out.println("Animal placement error: "+e.getCause());
+			System.exit(6);
 		}
 	}
 

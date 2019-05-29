@@ -15,8 +15,8 @@ public class Bush extends Tile
 
 		try
 		{
-			textureBack = new  ImageIcon(getClass().getClassLoader().getResource("terrain/grass0.png")).getImage();
-			texture = new  ImageIcon(getClass().getClassLoader().getResource("terrain/bush.png")).getImage();
+			textureBack = new  ImageIcon(getClass().getClassLoader().getResource("terrain/backg/grass0.png")).getImage();
+			texture = new  ImageIcon(getClass().getClassLoader().getResource("terrain/obstacle/bush.png")).getImage();
 		}
 		catch (Exception e)
 		{

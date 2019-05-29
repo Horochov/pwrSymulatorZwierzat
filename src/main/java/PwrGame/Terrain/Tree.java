@@ -14,13 +14,13 @@ public class Tree extends Tile
 		try
 		{
 			if (backgroundTile instanceof Grass||isBottom)
-				textureBack= new ImageIcon(getClass().getClassLoader().getResource("terrain/grass0.png")).getImage();
+				textureBack= new ImageIcon(getClass().getClassLoader().getResource("terrain/backg/grass0.png")).getImage();
 			else if(backgroundTile instanceof Sand)
-				textureBack= new ImageIcon(getClass().getClassLoader().getResource("terrain/sand.png")).getImage();
+				textureBack= new ImageIcon(getClass().getClassLoader().getResource("terrain/backg/sand.png")).getImage();
 			else
-				textureBack= new ImageIcon(getClass().getClassLoader().getResource("terrain/water.png")).getImage();
+				textureBack= new ImageIcon(getClass().getClassLoader().getResource("terrain/backg/water.png")).getImage();
 
-			texture = new  ImageIcon(getClass().getClassLoader().getResource("terrain/tree"+(isBottom?"Bottom":"Top")+".png")).getImage();
+			texture = new  ImageIcon(getClass().getClassLoader().getResource("terrain/obstacle/tree"+(isBottom?"Bottom":"Top")+".png")).getImage();
 		}
 		catch (Exception e)
 		{

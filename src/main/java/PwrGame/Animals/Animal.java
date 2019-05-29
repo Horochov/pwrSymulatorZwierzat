@@ -20,7 +20,6 @@ public abstract class Animal implements IAnimal
     protected boolean drinkingRight = false;
     protected boolean drinkingLeft = false;
     protected boolean lookingRight = false;
-    private boolean isAlive = true;
     protected int health;
     protected int age;
     protected int speed;
@@ -43,9 +42,8 @@ public abstract class Animal implements IAnimal
         setTextures();
     }
 
-    @Override
     public boolean isAlive() {
-        return isAlive;
+        return health>0;
     }
 
 
@@ -128,10 +126,6 @@ public abstract class Animal implements IAnimal
     protected void starve()
     {
         this.health -=1;
-        if(this.health == 0)
-        {
-            this.isAlive = false;
-        }
     }
 
 
