@@ -13,3 +13,22 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
+
+
+apply plugin: 'application'
+apply plugin: 'java'
+
+mainClassName = 'Main'
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+
+task runApp(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+
+  main = 'Main'
+
+  // arguments to pass to the application
+  args ''
+}
