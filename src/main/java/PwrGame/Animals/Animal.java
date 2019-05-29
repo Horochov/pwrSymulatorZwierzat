@@ -171,6 +171,7 @@ public abstract class Animal implements IAnimal
     private int time = 0;
     protected int movement = 0;
     private boolean drinking = false;
+    protected boolean eating = false;
     public void process(Vector<Tile> tiles, Vector<Animal> animals)
     {
         Random r = new Random();

@@ -142,13 +142,19 @@ public class Hare extends Animal
             if(t instanceof Grass)
             {
                 Position position = t.getPosition();
-                if(position.equalsRight(this.position))
+                if(this.hunger < 500 && position.equalsRight(this.position))
                 {
                     eatingRight = true;
+                    eating = true;
+                    this.hunger += 500;
+                    break;
                 }
-                if(position.equalsLeft(this.position))
+                if(this.hunger < 500 && position.equalsLeft(this.position))
                 {
                     eatingLeft = true;
+                    eating = true;
+                    this.hunger += 500;
+                    break;
                 }
             }
         }
