@@ -28,18 +28,13 @@ public class Hare extends Animal
                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving1_reverse.png")).getImage(),
                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving2_reverse.png")).getImage(),
                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving3_reverse.png")).getImage(),
+                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_drinking.png")).getImage(),
+                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_drinking_reverse.png")).getImage()
 //                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_sleeping.png")).getImage(),
 //                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_eating1.png")).getImage(),
 //                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_eating1_reverse.png")).getImage(),
 //                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_eating2.png")).getImage(),
 //                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_eating2_reverse.png")).getImage(),
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_drinking.png")).getImage(),
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_drinking_reverse.png")).getImage(),
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_dead1.png")).getImage(),
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_dead2.png")).getImage(),
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_dead3.png")).getImage(),
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_dead4.png")).getImage(),
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_dead5.png")).getImage(),
             };
         }
         catch (Exception e)
@@ -64,6 +59,14 @@ public class Hare extends Animal
 //        {
 //            current = textures[3];
 //        }
+        else if(drinkingRight)
+        {
+            current = textures[10];
+        }
+        else if(drinkingLeft)
+        {
+            current = textures[9];
+        }
         else if(movement == 1)
         {
             current = textures[3];

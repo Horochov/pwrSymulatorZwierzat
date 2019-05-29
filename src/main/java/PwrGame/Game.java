@@ -150,7 +150,7 @@ public class Game
 			for (int i = 0; i < wolfCnt; i++)
 			{
 				animals.add(
-						new Wolf(randAccessibleTile(), gridSize, 10, r.nextInt(84), 5, 0, 100, 70)
+						new Wolf(randAccessibleTile(), gridSize, 10, r.nextInt(84), 5, 0, 1000, 400)
 				);
 			}
 			for (int i = 0; i < hareCnt; i++)
@@ -158,7 +158,7 @@ public class Game
 				//check if another animal isn't there
 				animals.add(
 						//TODO: update constructor parameters
-						new Hare(randAccessibleTile(),gridSize, 30, r.nextInt(96), 3, 2, 100, 70)
+						new Hare(randAccessibleTile(),gridSize, 30, r.nextInt(96), 3, 5, 1000, 700)
 				);
 			}
 		}

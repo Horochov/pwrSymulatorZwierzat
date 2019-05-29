@@ -47,72 +47,7 @@ public abstract class Animal implements IAnimal
         return isAlive;
     }
 
-//    protected void move(Vector<Tile> tiles)
-//    {
-//        Random r = new Random();
-//        switch (r.nextInt(4))
-//        {
-//            case 0:
-//                for (Tile t : tiles)
-//                {
-//                    Position position = t.getPosition();
-//                    if (position.equalsRight(this.position))
-//                    {
-//                        if (t.isAccessible())
-//                       {
-//                           this.position.modifyX(40);
-//
-//                           break;
-//                       }
-//                    }
-//                }
-//                break;
-//            case 1:
-//                for (Tile t : tiles)
-//                {
-//                    Position position = t.getPosition();
-//                    if (position.equalsLeft(this.position))
-//                    {
-//                        if (t.isAccessible())
-//                        {
-//                            this.position.modifyX(-40);
-//                            break;
-//                        }
-//                    }
-//                }
-//                break;
-//            case 2:
-//                for (Tile t : tiles)
-//                {
-//                    Position position = t.getPosition();
-//                    if (position.equalsUp(this.position))
-//                    {
-//                        if (t.isAccessible())
-//                        {
-//                            this.position.modifyY(-40);
-//                            break;
-//                        }
-//                    }
-//                }
-//                break;
-//            case 3:
-//                for (Tile t : tiles)
-//                {
-//                    Position position = t.getPosition();
-//                    if (position.equalsDown(this.position))
-//                    {
-//                        if (t.isAccessible())
-//                        {
-//                            this.position.modifyY(40);
-//                            break;
-//                        }
-//                    }
-//                }
-//                break;
-//        }
-//    }
 
-    public int checker = 0;
     protected void move(Vector<Tile> tiles)
     {
         Random r = new Random();
@@ -121,8 +56,6 @@ public abstract class Animal implements IAnimal
                 Position position = t.getPosition();
                 if (position.equalsLeft(this.position)) {
                     if (t.isAccessible()) {
-                        System.out.println("accessibleLEFT");
-                        System.out.println(checker);
                         this.position.modifyX(-15);
                         movement = 2;
                         break;
@@ -141,8 +74,6 @@ public abstract class Animal implements IAnimal
                      {
                          if (t.isAccessible())
                           {
-                              System.out.println("accessibleUP");
-                              System.out.println(checker);
                               this.position.modifyY(-15);
                               movement = 5;
                               break;
@@ -161,8 +92,6 @@ public abstract class Animal implements IAnimal
                 {
                     if (t.isAccessible())
                     {
-                        System.out.println("accessibleRIGHT");
-                        System.out.println(checker);
                         this.position.modifyX(15);
                         movement = 8;
                         break;
@@ -181,8 +110,6 @@ public abstract class Animal implements IAnimal
                 {
                     if (t.isAccessible())
                     {
-                        System.out.println("accessibleDOWN");
-                        System.out.println(checker);
                         this.position.modifyY(15);
                         movement = 11;
                         break;
@@ -202,17 +129,15 @@ public abstract class Animal implements IAnimal
         this.health -=1;
         if(this.health == 0)
         {
-            isAlive = false;
+            this.isAlive = false;
         }
     }
 
 
     //protected void updateStatus();
     public abstract void display(Graphics g);
-    //protected boolean isAlive();
-    //protected void process();
     //protected void procreate();
-    //protected abstract void drink();
+
     protected abstract void eat(Vector<Tile> tiles);
     //protected void lookAround();
 
@@ -223,25 +148,40 @@ public abstract class Animal implements IAnimal
             if(t.getResourceType() == Tile.ResourceType.water)
             {
                 Position position = t.getPosition();
-                if(position.equalsRight(this.position))
+                if(this.thirst < 300 && position.equalsRight(this.position))
                 {
                     drinkingRight = true;
+                    drinking = true;
+                    this.thirst += 300;
+                    break;
                 }
-                if(position.equalsLeft(this.position))
+                if(this.thirst < 300 && position.equalsLeft(this.position))
                 {
                     drinkingLeft = true;
+                    drinking = true;
+                    this.thirst += 300;
+                    break;
                 }
             }
         }
     }
 
 
-
     private int time = 0;
     protected int movement = 0;
+    private boolean drinking = false;
     public void process(Vector<Tile> tiles, Vector<Animal> animals)
     {
         Random r = new Random();
+        this.thirst -= 1;
+        this.hunger -= 1;
+
+
+        if(this.thirst < 0)
+        {
+            starve();
+        }
+
         if(movement != 0) {
             time += 3;
             if(time == 9) {
@@ -251,6 +191,7 @@ public abstract class Animal implements IAnimal
                 } else if (movement == 3) {
                     this.position.modifyX(-10);
                     movement = 0;
+                    lookingRight = false;
                 } else if (movement == 5) {
                     this.position.modifyY(-15);
                     movement = 6;
@@ -263,6 +204,7 @@ public abstract class Animal implements IAnimal
                 } else if (movement == 9) {
                     this.position.modifyX(10);
                     movement = 0;
+                    lookingRight = true;
                 } else if (movement == 11) {
                     this.position.modifyY(15);
                     movement = 12;
@@ -275,9 +217,11 @@ public abstract class Animal implements IAnimal
         }
         else
             {
-                //System.out.println("movement jest 0");
             time++;
             if (time == 9) {
+
+                drink(tiles);
+
                 if (idling) {
                     switch (r.nextInt(2)) {
                         case 0:
@@ -286,9 +230,17 @@ public abstract class Animal implements IAnimal
                         case 1:
                             break;
                     }
-                } else if (this.thirst < 40) {
-                    drink(tiles);
-                } else if (this.hunger < 40) {
+                }
+                else if(drinking)
+                {
+                    if(this.thirst < 600)
+                        drink(tiles);
+                    else {
+                        drinking = false;
+                        drinkingLeft = false;
+                        drinkingRight = false;
+                    }
+                } else if (this.hunger < 300) {
                     eat(tiles);
                 } else {
                     switch (r.nextInt(5)) {

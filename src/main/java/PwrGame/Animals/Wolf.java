@@ -28,12 +28,11 @@ public class Wolf extends Animal
                          new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_walking1_reverse.png")).getImage(),
                          new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_walking2_reverse.png")).getImage(),
                          new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_walking3_reverse.png")).getImage(),
+                         new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_drinking.png")).getImage(),
+                         new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_drinking_reverse.png")).getImage()
 //                         new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_sleeping.png")).getImage(),
 //                         new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_eating.png")).getImage(),
 //                         new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_eating_reverse.png")).getImage(),
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_drinking.png")).getImage(),
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_drinking_reverse.png")).getImage(),
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_dead.png")).getImage(),
             };
         }
         catch (Exception e)
@@ -65,7 +64,14 @@ public class Wolf extends Animal
 //        else if(!isAlive())
 //        {
 //            current = textures[4];
-//        }
+        else if(drinkingRight)
+        {
+            current = textures[10];
+        }
+        else if(drinkingLeft)
+        {
+            current = textures[9];
+        }
         else if(movement == 1)
         {
             current = textures[3];
