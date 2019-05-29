@@ -3,22 +3,24 @@ package PwrGame.Terrain;
 import javax.swing.*;
 import java.awt.*;
 
-public class WolfCorpse	extends Tile
+public class WolfCorpse	extends AnimatedTile
 {
-	protected Image img;
 	public WolfCorpse(Tile backgroundTile)
 	{
 		this.position=backgroundTile.getPosition();
 		this.size=backgroundTile.size;
 
 		if (backgroundTile instanceof Grass)
-			texture= new ImageIcon(getClass().getClassLoader().getResource("terrain/grass0.png")).getImage();
+			texture= new ImageIcon(getClass().getClassLoader().getResource("terrain/backg/grass0.png")).getImage();
 		else
-			texture= new ImageIcon(getClass().getClassLoader().getResource("terrain/sand.png")).getImage();
+			texture= new ImageIcon(getClass().getClassLoader().getResource("terrain/backg/sand.png")).getImage();
 
 		try
 		{
-			img  = new ImageIcon(getClass().getClassLoader().getResource("terrain/wolf1a.png")).getImage();
+			textures  = new Image[]{
+					new ImageIcon(getClass().getClassLoader().getResource("terrain/corpse/wolf2.png")).getImage(),
+					new ImageIcon(getClass().getClassLoader().getResource("terrain/corpse/wolf1a.png")).getImage(),
+			};
 		}
 		catch (Exception e)
 		{
@@ -28,12 +30,17 @@ public class WolfCorpse	extends Tile
 
 		accessible=false;
 
+		ticksPerGrowth=800;
+		addPerTick=-1;
+		maxCount= (byte) (textures.length-1);
+		count= maxCount;
+
 	}
 
 	@Override
 	public void display(Graphics g)
 	{
 		g.drawImage(texture,position.getX(),position.getY(),size,size,null);
-		g.drawImage(img, position.getX(), position.getY(), size, size, null);
+		g.drawImage(textures[count], position.getX(), position.getY(), size, size, null);
 	}
 }

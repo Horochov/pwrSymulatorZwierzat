@@ -9,8 +9,8 @@ import PwrGame.Terrain.OpenSimplexNoise.OpenSimplexNoise;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Random;
-import java.util.Vector;
+import java.util.*;
+import java.util.List;
 
 public class Game
 {
@@ -34,15 +34,17 @@ public class Game
 	private Vector<Tile> tiles;
 
 
-	public Game(byte gridWidth, byte gridHeight, byte gridSize, int wolfCount, int hareCount )
+	public Game(byte gridWidth, byte gridHeight, byte gridSize, int wolfCount, int hareCount,
+	            int bushCount, int treeCount, int rockCount)
 	{
-		animals = new Vector<>(255);
-		tiles=new Vector<>(255);
+		animals = new Vector<>();
+		tiles=new Vector<>();
 		this.gridWidth=gridWidth;
 		this.gridHeight=gridHeight;
 		this.gridSize=gridSize;
 		prepareGraphics();
 		prepareTerrain(8);
+		placeObstacles(bushCount,treeCount,rockCount);
 		prepareAnimals(wolfCount,hareCount);
 	}
 
@@ -100,38 +102,110 @@ public class Game
 				}
 			}
 	}
-
-	private Position randAccessibleTile()
+	private void placeObstacles(int bushCount, int treeCount, int rockCount)
 	{
 		Random r = new Random();
-		Position pos = new Position(r.nextInt(gridWidth)*gridSize,r.nextInt(gridHeight)*gridSize);
-		for (int t = 0; t < 20; t++)
+		while (treeCount>0)
 		{
-			for (int j = 0; j < animals.size(); j++)
+
+			//Find random grass tile, but not topmost one
+			int idxDwn = r.nextInt(tiles.size());
+			if((!(tiles.elementAt(idxDwn) instanceof Grass))
+					||(tiles.elementAt(idxDwn).getPosition().getY()==0))
+				continue;
+
+			//search for tree corona tile
+			Position topPos = tiles.elementAt(idxDwn).getPosition();
+			topPos.modifyY(-40);
+			int idxTop;
+			for (idxTop = 0; idxTop < tiles.size(); idxTop++)
 			{
-				if (pos.equals(animals.elementAt(j).getPosition()))
-				{
-					//generate new pos and start searching again
-					//TODO: handle animal overflow (more animals than grid allows)
-					pos = new Position(r.nextInt(gridWidth) * gridSize, r.nextInt(gridHeight) * gridSize);
-					j = 0;
-				}
+				if(tiles.elementAt(idxTop).getPosition().equals(topPos))
+					break;
 			}
-			for (int j = 0; j < tiles.size(); j++)
-			{
-				if (pos.equals(tiles.elementAt(j).getPosition()))
-				{
-					if(tiles.elementAt(j).isAccessible())
-						return pos;
-					//generate new pos and start searching again
-					pos = new Position(r.nextInt(gridWidth) * gridSize, r.nextInt(gridHeight) * gridSize);
-					j = 0;
-				}
-			}
+			//check if it is "standard" tile
+			if(!(tiles.elementAt(idxTop) instanceof Grass||
+					tiles.elementAt(idxTop) instanceof Water||
+					tiles.elementAt(idxTop) instanceof Sand))
+				continue;
+
+
+			//place tree stump
+			tiles.add(new Tree(tiles.elementAt(idxDwn),gridSize,true));
+			tiles.add(new Tree(tiles.elementAt(idxTop),gridSize,false));
+
+			//delete greater index first
+			tiles.removeElementAt(idxDwn>idxTop?idxDwn:idxTop);
+			tiles.removeElementAt(idxDwn<idxTop?idxDwn:idxTop);
+			treeCount--;
 		}
-		System.out.println("Search for accessible tile: exceeded 10 tries");
-		return pos;
+		while (bushCount>0)
+		{
+
+			//Find random grass tile
+			int idx = r.nextInt(tiles.size());
+			if(!(tiles.elementAt(idx) instanceof Grass))
+			{
+				continue;
+			}
+
+			//save location and delet' it
+			Position pos = tiles.elementAt(idx).getPosition();
+			tiles.removeElementAt(idx);
+
+			//place Bush. George Bush.
+			tiles.add(new Bush(pos,gridSize));
+
+			bushCount--;
+		}
+		while (rockCount>0)
+		{
+
+			//Find random tile
+			int idx = r.nextInt(tiles.size());
+			if(!(tiles.elementAt(idx) instanceof Grass || tiles.elementAt(idx) instanceof Sand))
+				continue;
+
+			//save location and delet' it
+
+			//place Bush. George Bush.
+			tiles.add(new Rock(tiles.elementAt(idx),gridSize));
+
+			tiles.removeElementAt(idx);
+
+			rockCount--;
+		}
+
 	}
+
+	private Position unoccupiedTile()
+	{
+		Random r = new Random();
+
+		Set<Position> ocuppiedPos = new HashSet<Position>();
+		tiles.forEach(tile -> {
+			if(!tile.isAccessible())
+				ocuppiedPos.add(tile.getPosition());
+		});
+		animals.forEach(animal -> {
+			ocuppiedPos.add(animal.getPosition());
+		});
+
+		if(ocuppiedPos.size()>=gridWidth*gridHeight)
+		{
+			System.out.println("Error: cannot find unoccupied tile!");
+			return null;
+		}
+
+		while(true)
+		{
+			Position pos = new Position(r.nextInt(gridWidth) * gridSize, r.nextInt(gridHeight) * gridSize);
+			if (ocuppiedPos.contains(pos))
+				continue;
+			return pos;
+		}
+	}
+
 	private void prepareAnimals(int wolfCnt, int hareCnt)
 	{
 		//#Todo: proper animal placement (groups?)
@@ -141,13 +215,24 @@ public class Game
 
 			for (int i = 0; i < wolfCnt; i++)
 			{
+				Position pos=unoccupiedTile();
+				if(pos==null)
+				{
+					System.out.println("Warning: Tried to place too many animals, ammount has been limited.");
+					return;
+				}
 				animals.add(
 						new Wolf(randAccessibleTile(), gridSize, 200, r.nextInt(8640), 5, 50, 1000, 700, 1000, 200, 200, 20)
 				);
 			}
 			for (int i = 0; i < hareCnt; i++)
 			{
-				//check if another animal isn't there
+				Position pos=unoccupiedTile();
+				if(pos==null)
+				{
+					System.out.println("Warning: Tried to place too many animals, ammount has been limited.");
+					return;
+				}
 				animals.add(
 						//TODO: update constructor parameters
 						new Hare(randAccessibleTile(),gridSize, 100, r.nextInt(7560), 3, 0, 1000, 700, 1000, 50, 50, 10)
@@ -156,13 +241,17 @@ public class Game
 		}
 		catch (Exception e)
 		{
-			System.out.println("Terrain texture set error: "+e.getCause());
-			System.exit(4);
+			System.out.println("Animal placement error: "+e.getCause());
+			System.exit(6);
 		}
 	}
 
 	private void animal2corpse()
 	{
+		/*
+		 *  Search for dead animal and replace it with corpse.
+		 *  Will delete animal and tile, then create tile <animal>Corpse
+		 */
 		for (int i = 0; i <animals.size() ; i++)
 		{
 			//if animal is dead

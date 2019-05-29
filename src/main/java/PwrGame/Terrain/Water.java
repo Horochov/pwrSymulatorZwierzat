@@ -15,7 +15,7 @@ public class Water extends Tile
 
 		try
 		{
-			texture = new  ImageIcon(getClass().getClassLoader().getResource("terrain/water.png")).getImage();
+			texture = new  ImageIcon(getClass().getClassLoader().getResource("terrain/backg/water.png")).getImage();
 		}
 		catch (Exception e)
 		{

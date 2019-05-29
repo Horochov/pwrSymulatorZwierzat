@@ -15,7 +15,7 @@ public class Sand
 
 		try
 		{
-			texture = new  ImageIcon(getClass().getClassLoader().getResource("terrain/sand.png")).getImage();
+			texture = new  ImageIcon(getClass().getClassLoader().getResource("terrain/backg/sand.png")).getImage();
 		}
 		catch (Exception e)
 		{

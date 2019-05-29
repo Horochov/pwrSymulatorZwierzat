@@ -19,7 +19,21 @@ public class Main
 	private JButton  bGenerate;
 	private JButton bPause;
 	private JFormattedTextField tfWolfCnt;
-	private JFormattedTextField tfhareCnt;
+	private JFormattedTextField tfHareCnt;
+	private JFormattedTextField tfTreeCnt;
+	private JFormattedTextField tfBushCnt;
+	private JFormattedTextField tfRockCnt;
+
+	private byte defGridWid = 30;
+	private byte defGridHei = 20;
+	private byte defGridSiz = 40;
+
+
+	private int defWolfCnt = 10;
+	private int defHareCnt = 10;
+	private int defTreeCnt = 10;
+	private int defBushCnt = 10;
+	private int defRockCnt = 10;
 
 	public Main()
 	{
@@ -30,7 +44,7 @@ public class Main
 		frame.setLayout(new GridBagLayout());
 
 		//pre-init game window
-		game = new Game((byte) 30,(byte) 20,(byte) 40, 10, 10);
+		game = new Game(defGridWid,defGridHei,defGridSiz, defWolfCnt,defHareCnt,defBushCnt,defTreeCnt,defRockCnt);
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill=GridBagConstraints.HORIZONTAL;
 		c.gridx=0;
@@ -88,17 +102,41 @@ public class Main
 
 				//filter textFields
 				try {
-					Integer.parseInt(tfWolfCnt.getText());
+					if(Integer.parseInt(tfWolfCnt.getText())<0)
+					tfWolfCnt.setValue(0);
 				} catch (NumberFormatException ex) {
-					tfWolfCnt.setValue(10);
+					tfWolfCnt.setValue(defWolfCnt);
 				}
 				try {
-					Integer.parseInt(tfhareCnt.getText());
+					if(Integer.parseInt(tfHareCnt.getText())<0)
+					tfHareCnt.setValue(0);
 				} catch (NumberFormatException ex) {
-					tfhareCnt.setValue(10);
+					tfHareCnt.setValue(defHareCnt);
+				}
+				try {
+					if(Integer.parseInt(tfTreeCnt.getText())<0)
+					tfTreeCnt.setValue(0);
+				} catch (NumberFormatException ex) {
+					tfTreeCnt.setValue(defTreeCnt);
+				}
+				try {
+					if(Integer.parseInt(tfRockCnt.getText())<0)
+						tfRockCnt.setValue(0);
+				} catch (NumberFormatException ex) {
+					tfRockCnt.setValue(defRockCnt);
+				}
+				try {
+					if(Integer.parseInt(tfBushCnt.getText())<0)
+						tfBushCnt.setValue(0);
+				} catch (NumberFormatException ex) {
+					tfBushCnt.setValue(defBushCnt);
 				}
 
-				game = new Game((byte) 30,(byte) 20,(byte) 40,Integer.parseInt(tfWolfCnt.getText()),Integer.parseInt(tfhareCnt.getText()));
+				game = new Game(defGridWid,defGridHei,defGridSiz,
+				                Integer.parseInt(tfWolfCnt.getText()),Integer.parseInt(tfHareCnt.getText()),
+				                Integer.parseInt(tfBushCnt.getText()),Integer.parseInt(tfTreeCnt.getText()),
+				                Integer.parseInt(tfRockCnt.getText())
+				);
 				GridBagConstraints c = new GridBagConstraints();
 				c.fill=GridBagConstraints.HORIZONTAL;
 				c.gridx=0;
@@ -164,32 +202,71 @@ public class Main
 		JLabel lWolfCnt = new JLabel("Ilość wilków");
 		JLabel lHareCnt = new JLabel("Ilość zajęcy");
 		tfWolfCnt = new JFormattedTextField();
-		tfWolfCnt.setValue(10);
-		tfhareCnt = new JFormattedTextField();
-		tfhareCnt.setValue(10);
+		tfWolfCnt.setValue(defWolfCnt);
+		tfHareCnt = new JFormattedTextField();
+		tfHareCnt.setValue(defHareCnt);
+
+		JLabel lTreeCnt = new JLabel("Ilość drzew");
+		JLabel lBushCnt = new JLabel("Ilość krzaków");
+		JLabel lRockCnt = new JLabel("Ilość kamieni");
+		tfTreeCnt = new JFormattedTextField();
+		tfTreeCnt.setValue(defTreeCnt);
+		tfBushCnt = new JFormattedTextField();
+		tfBushCnt.setValue(defBushCnt);
+		tfRockCnt = new JFormattedTextField();
+		tfRockCnt.setValue(defRockCnt);
+
 		//Manage menu layout
 		c = new GridBagConstraints();
 		c.fill=GridBagConstraints.HORIZONTAL;
 		c.gridx=1;
 		c.gridheight=1;
+		c.insets.bottom=1;
 
 		c.gridy=0;
+
+		c.insets.left=2;
+		c.insets.right=2;
+		GridBagConstraints d = (GridBagConstraints)c.clone();
+		d.insets.left=0;
+		d.gridx++;
+
 		frame.add(lWolfCnt,c);
-		c.gridx++;
-		frame.add(tfWolfCnt,c);
-		c.gridx--;
+		frame.add(tfWolfCnt,d);
 
 		c.gridy++;
+		d.gridy++;
+		c.insets.bottom=10;
+		d.insets.bottom=10;
 		frame.add(lHareCnt,c);
-		c.gridx++;
-		frame.add(tfhareCnt,c);
-		c.gridx--;
+		frame.add(tfHareCnt,d);
+		c.insets.bottom=1;
+		d.insets.bottom=1;
+
+		c.gridy++;
+		d = (GridBagConstraints)c.clone();
+		d.insets.left=0;
+		d.gridx++;
+		frame.add(lRockCnt,c);
+		frame.add(tfRockCnt,d);
+
+		c.gridy++;
+		d.gridy++;
+		frame.add(lBushCnt,c);
+		frame.add(tfBushCnt,d);
+
+		c.gridy++;
+		d.gridy++;
+		frame.add(lTreeCnt,c);
+		frame.add(tfTreeCnt,d);
+
+
 
 		c.gridwidth=2;
 		c.gridy++;
+		c.insets.top=10;
 		frame.add(bGenerate,c);
-//		frame.getRootPane().setDefaultButton(bGenerate);
-//		bGenerate.requestFocusInWindow();
+		c.insets.top=0;
 
 		c.gridy++;
 		frame.add(bPause,c);

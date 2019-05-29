@@ -86,7 +86,7 @@ public abstract class Animal implements IAnimal
 
     @Override
     public boolean isAlive() {
-        return isAlive;
+        return health>0;
     }
 
 
@@ -171,10 +171,6 @@ public abstract class Animal implements IAnimal
     protected void starve()
     {
         this.health -=1;
-        if(this.health == 0)
-        {
-            this.isAlive = false;
-        }
     }
 
     protected  void sleep()

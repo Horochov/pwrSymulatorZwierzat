@@ -16,10 +16,10 @@ public class Grass extends AnimatedTile
 		try
 		{
 			textures = new Image[]{
-					new ImageIcon(getClass().getClassLoader().getResource("terrain/grass0.png")).getImage(),
-					new ImageIcon(getClass().getClassLoader().getResource("terrain/grass1.png")).getImage(),
-					new ImageIcon(getClass().getClassLoader().getResource("terrain/grass2.png")).getImage(),
-					new ImageIcon(getClass().getClassLoader().getResource("terrain/grass3.png")).getImage(),
+					new ImageIcon(getClass().getClassLoader().getResource("terrain/backg/grass0.png")).getImage(),
+					new ImageIcon(getClass().getClassLoader().getResource("terrain/backg/grass1.png")).getImage(),
+					new ImageIcon(getClass().getClassLoader().getResource("terrain/backg/grass2.png")).getImage(),
+					new ImageIcon(getClass().getClassLoader().getResource("terrain/backg/grass3.png")).getImage(),
 					};
 		}
 		catch (Exception e)

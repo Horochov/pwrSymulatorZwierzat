@@ -7,8 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
 
-public class HareCorpse
-		extends AnimatedTile
+public class HareCorpse	extends AnimatedTile
 {
 	public HareCorpse(Tile backgroundTile)
 	{
@@ -16,17 +15,17 @@ public class HareCorpse
 		this.size=backgroundTile.size;
 
 		if (backgroundTile instanceof Grass)
-			texture= new ImageIcon(getClass().getClassLoader().getResource("terrain/grass0.png")).getImage();
+			texture= new ImageIcon(getClass().getClassLoader().getResource("terrain/backg/grass0.png")).getImage();
 		else
-			texture= new ImageIcon(getClass().getClassLoader().getResource("terrain/sand.png")).getImage();
+			texture= new ImageIcon(getClass().getClassLoader().getResource("terrain/backg/sand.png")).getImage();
 
 		try
 		{
 			textures  = new Image[]{
-					new ImageIcon(getClass().getClassLoader().getResource("terrain/hare4.png")).getImage(),
-					new ImageIcon(getClass().getClassLoader().getResource("terrain/hare3.png")).getImage(),
-					new ImageIcon(getClass().getClassLoader().getResource("terrain/hare2.png")).getImage(),
-					new ImageIcon(getClass().getClassLoader().getResource("terrain/hare1.png")).getImage(),
+					new ImageIcon(getClass().getClassLoader().getResource("terrain/corpse/hare4.png")).getImage(),
+					new ImageIcon(getClass().getClassLoader().getResource("terrain/corpse/hare3.png")).getImage(),
+					new ImageIcon(getClass().getClassLoader().getResource("terrain/corpse/hare2.png")).getImage(),
+					new ImageIcon(getClass().getClassLoader().getResource("terrain/corpse/hare1.png")).getImage(),
 					};
 		}
 		catch (Exception e)
