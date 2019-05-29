@@ -1,6 +1,7 @@
 package PwrGame.Animals;
 
 import PwrGame.Position;
+import PwrGame.Terrain.HareCorpse;
 import PwrGame.Terrain.Tile;
 import PwrGame.Terrain.Water;
 
@@ -10,9 +11,9 @@ import java.util.Vector;
 
 public class Wolf extends Animal
 {
-    public Wolf(Position position, byte textureSize, int health, int age, int speed, int damage, int hunger, int thirst)
+    public Wolf(Position position, byte textureSize, int health, int age, int speed, int damage, int hunger, int thirst, int fatigue, int lust, int maxLust, int maxHealth)
     {
-        super(position, textureSize, health, age, speed, damage, hunger, thirst);
+        super(position, textureSize, health, age, speed, damage, hunger, thirst, fatigue, lust, maxLust, maxHealth);
     }
 
     public void setTextures()
@@ -30,10 +31,12 @@ public class Wolf extends Animal
                          new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_walking2_reverse.png")).getImage(),
                          new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_walking3_reverse.png")).getImage(),
                          new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_drinking.png")).getImage(),
-                         new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_drinking_reverse.png")).getImage()
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_sleeping.png")).getImage(),
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_eating.png")).getImage(),
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_eating_reverse.png")).getImage(),
+                         new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_drinking_reverse.png")).getImage(),
+                         new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_eating.png")).getImage(),
+                         new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_eating_reverse.png")).getImage(),
+                    new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_sleeping.png")).getImage(),
+                    new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_attacking.png")).getImage(),
+                    new ImageIcon(getClass().getClassLoader().getResource("animals/wolf_attacking_reverse.png")).getImage()
             };
         }
         catch (Exception e)
@@ -50,21 +53,18 @@ public class Wolf extends Animal
         {
             current=textures[2];
         }
-//        else if(sleeping)
-//        {
-//            current=textures[2];
-//        }
-//        else if(eatingRight)
-//        {
-//            current = textures[3];
-//        }
-//        else if(eatingLeft)
-//        {
-//            current = textures[3];
-//        }
-//        else if(!isAlive())
-//        {
-//            current = textures[4];
+        else if(sleeping)
+        {
+            current=textures[13];
+        }
+        else if(eatingRight)
+        {
+            current = textures[12];
+        }
+        else if(eatingLeft)
+        {
+            current = textures[11];
+        }
         else if(drinkingRight)
         {
             current = textures[10];
@@ -72,6 +72,14 @@ public class Wolf extends Animal
         else if(drinkingLeft)
         {
             current = textures[9];
+        }
+        else if(attackingLeft)
+        {
+            current = textures[14];
+        }
+        else if(attackingRight)
+        {
+            current = textures[15];
         }
         else if(movement == 1)
         {
@@ -133,26 +141,110 @@ public class Wolf extends Animal
         g.drawImage(current,position.getX(),position.getY(),textureSize,textureSize,null);
     }
 
+    protected void procreate(Vector<Wolf> animals)
+    {
+
+    }
+
+//    @Override
+//    public void process(Vector<Tile> tiles, Vector<Animal> animals)
+//    {
+//        super.process(tiles, animals);
+//        System.out.println("hunger: " + this.hunger + "   " + "thirst" + this.thirst);
+//    }
+
     @Override
     protected void eat(Vector<Tile> tiles)
     {
         for(Tile t : tiles)
         {
-            if(t instanceof Water)
+            if(t instanceof HareCorpse)
             {
                 Position position = t.getPosition();
-                if(position.equalsRight(this.position))
+                if(position.equalsRight(this.position) && t.getResourceCount() > 0)
                 {
-                    drinkingRight = true;
+                    eatingRight = true;
+                    eating = true;
+                    this.hunger += 500;
+                    t.consumeResource();
+                    break;
                 }
-                if(position.equalsLeft(this.position))
+                if(position.equalsLeft(this.position) && t.getResourceCount() > 0)
                 {
-                    drinkingLeft = true;
+                    eatingLeft = true;
+                    eating = true;
+                    this.hunger += 500;
+                    t.consumeResource();
+                    break;
+                }
+                if(position.equalsUp(this.position) && t.getResourceCount() > 0)
+                {
+                    eatingLeft = true;
+                    eating = true;
+                    this.hunger += 500;
+                    t.consumeResource();
+                    break;
+                }
+                if(position.equalsDown(this.position) && t.getResourceCount() > 0)
+                {
+                    eatingLeft = true;
+                    eating = true;
+                    this.hunger += 500;
+                    t.consumeResource();
+                    break;
                 }
             }
         }
     }
 
     //protected void searchForFood();
-    //protected void attack();
+    private boolean attackingLeft = false;
+    private boolean attackingRight = false;
+
+    @Override
+    protected void attack(Vector<Animal> animals)
+    {
+        for (Animal a : animals)
+        {
+            if(a instanceof Hare)
+            {
+                Position position = a.getPosition();
+                if (position.equalsRight(this.position))
+                {
+                    attackingRight = true;
+                    a.health -= this.damage;
+                    this.fatigue -= 100;
+                    attacking = true;
+                    break;
+                }
+                else if (position.equalsLeft(this.position))
+                {
+                    attackingLeft = true;
+                    a.health -= this.damage;
+                    this.fatigue -= 100;
+                    attacking = true;
+                    break;
+                }
+                else if (position.equalsUp(this.position))
+                {
+                    attackingLeft = true;
+                    a.health -= this.damage;
+                    this.fatigue -= 100;
+                    attacking = true;
+                    break;
+                }
+                else if (position.equalsDown(this.position))
+                {
+                    attackingLeft = true;
+                    a.health -= this.damage;
+                    this.fatigue -= 100;
+                    attacking = true;
+                    break;
+                }
+                attackingLeft = false;
+                attackingRight = false;
+                attacking = false;
+            }
+        }
+    }
 }

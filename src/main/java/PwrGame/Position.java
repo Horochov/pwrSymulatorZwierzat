@@ -23,8 +23,6 @@ public class Position
 	public int modifyX(int dx)
 	{
 		return posX+=dx;
-		//posX += dx;
-		//return posX;
 	}
 	public int modifyY(int dy)
 	{

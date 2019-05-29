@@ -10,9 +10,9 @@ import java.util.Vector;
 
 public class Hare extends Animal
 {
-    public Hare(Position position, byte textureSize, int health, int age, int speed, int damage, int hunger, int thirst)
+    public Hare(Position position, byte textureSize, int health, int age, int speed, int damage, int hunger, int thirst, int fatigue, int lust, int maxLust, int maxHealth)
     {
-        super(position, textureSize, health, age, speed, damage, hunger, thirst);
+        super(position, textureSize, health, age, speed, damage, hunger, thirst, fatigue, lust, maxLust, maxHealth);
     }
 
     public void setTextures()
@@ -30,12 +30,10 @@ public class Hare extends Animal
                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving2_reverse.png")).getImage(),
                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_moving3_reverse.png")).getImage(),
                          new ImageIcon(getClass().getClassLoader().getResource("animals/hare_drinking.png")).getImage(),
-                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_drinking_reverse.png")).getImage()
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_sleeping.png")).getImage(),
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_eating1.png")).getImage(),
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_eating1_reverse.png")).getImage(),
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_eating2.png")).getImage(),
-//                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_eating2_reverse.png")).getImage(),
+                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_drinking_reverse.png")).getImage(),
+                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_eating1.png")).getImage(),
+                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_eating1_reverse.png")).getImage(),
+                         new ImageIcon(getClass().getClassLoader().getResource("animals/hare_sleeping.png")).getImage()
             };
         }
         catch (Exception e)
@@ -52,14 +50,18 @@ public class Hare extends Animal
         {
             current=textures[2];
         }
-//        else if(sleeping)
-//        {
-//            current=textures[2];
-//        }
-//        else if(!isAlive())
-//        {
-//            current = textures[3];
-//        }
+        else if(sleeping)
+        {
+            current=textures[13];
+        }
+        else if(eatingRight)
+        {
+            current = textures[12];
+        }
+        else if(eatingLeft)
+        {
+            current = textures[11];
+        }
         else if(drinkingRight)
         {
             current = textures[10];
@@ -128,10 +130,26 @@ public class Hare extends Animal
         g.drawImage(current,position.getX(),position.getY(),textureSize,textureSize,null);
     }
 
+    @Override
+    protected void attack(Vector<Animal> animals) {
+
+    }
 
     protected void runInPanic()
     {
         this.speed += 3;
+    }
+
+    protected void procreate(Vector<Hare> animals)
+    {
+        for(Hare h : animals)
+        {
+            Position position = h.getPosition();
+            if((position.equalsRight(this.position) || position.equalsLeft(this.position) || position.equalsUp(this.position) || position.equalsDown(this.position)) && (h.lust == 0 && this.lust == 0))
+            {
+
+            }
+        }
     }
 
     @Override
@@ -142,37 +160,24 @@ public class Hare extends Animal
             if(t instanceof Grass)
             {
                 Position position = t.getPosition();
-                if(this.hunger < 500 && position.equalsRight(this.position))
+                if(position.equalsRight(this.position) && t.getResourceCount() > 0)
                 {
                     eatingRight = true;
                     eating = true;
                     this.hunger += 500;
+                    t.consumeResource();
                     break;
                 }
-                if(this.hunger < 500 && position.equalsLeft(this.position))
+                if(position.equalsLeft(this.position) && t.getResourceCount() > 0)
                 {
                     eatingLeft = true;
                     eating = true;
                     this.hunger += 500;
+                    t.consumeResource();
                     break;
                 }
             }
         }
     }
-/*    protected void searchForFood(Vector<Tile> tiles, Vector<Hare> animals)
-    {
-        for(Hare a : animals)
-        {
-            for(Tile t : tiles)
-            {
-                Position position = t.getPosition();
-                Position positionX = t.getX;
-                if(t.getX())
-            }
-        }
-    }*/
-
-
-
 
 }

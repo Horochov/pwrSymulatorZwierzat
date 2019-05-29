@@ -8,4 +8,7 @@ public class AnimalStats
     protected int damage;
     protected int hunger;
     protected int thirst;
+    protected int lust;
+    protected int maxLust;
+    protected int maxHealth;
 }
