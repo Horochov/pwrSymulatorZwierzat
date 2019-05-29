@@ -222,7 +222,7 @@ public class Game
 					return;
 				}
 				animals.add(
-						new Wolf(randAccessibleTile(), gridSize, 200, r.nextInt(8640), 5, 50, 1000, 700, 1000, 200, 200, 20)
+						new Wolf(pos, gridSize, 200, r.nextInt(8640), 5, 50, 1000, 700, 1000, 200, 200, 20)
 				);
 			}
 			for (int i = 0; i < hareCnt; i++)
@@ -235,7 +235,7 @@ public class Game
 				}
 				animals.add(
 						//TODO: update constructor parameters
-						new Hare(randAccessibleTile(),gridSize, 100, r.nextInt(7560), 3, 0, 1000, 700, 1000, 50, 50, 10)
+						new Hare(pos,gridSize, 100, r.nextInt(7560), 3, 0, 1000, 700, 1000, 50, 50, 10)
 				);
 			}
 		}
