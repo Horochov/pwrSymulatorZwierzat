@@ -9,8 +9,8 @@ import PwrGame.Terrain.OpenSimplexNoise.OpenSimplexNoise;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Random;
-import java.util.Vector;
+import java.util.*;
+import java.util.List;
 
 public class Game
 {
@@ -37,8 +37,8 @@ public class Game
 	public Game(byte gridWidth, byte gridHeight, byte gridSize, int wolfCount, int hareCount,
 	            int bushCount, int treeCount, int rockCount)
 	{
-		animals = new Vector<>(255);
-		tiles=new Vector<>(255);
+		animals = new Vector<>();
+		tiles=new Vector<>();
 		this.gridWidth=gridWidth;
 		this.gridHeight=gridHeight;
 		this.gridSize=gridSize;
@@ -178,37 +178,34 @@ public class Game
 
 	}
 
-	private Position randAccessibleTile()
+	private Position unoccupiedTile()
 	{
 		Random r = new Random();
-		Position pos = new Position(r.nextInt(gridWidth)*gridSize,r.nextInt(gridHeight)*gridSize);
-		for (int t = 0; t < 20; t++)
+
+		Set<Position> ocuppiedPos = new HashSet<Position>();
+		tiles.forEach(tile -> {
+			if(!tile.isAccessible())
+				ocuppiedPos.add(tile.getPosition());
+		});
+		animals.forEach(animal -> {
+			ocuppiedPos.add(animal.getPosition());
+		});
+
+		if(ocuppiedPos.size()>=gridWidth*gridHeight)
 		{
-			for (int j = 0; j < animals.size(); j++)
-			{
-				if (pos.equals(animals.elementAt(j).getPosition()))
-				{
-					//generate new pos and start searching again
-					//TODO: handle animal overflow (more animals than grid allows)
-					pos = new Position(r.nextInt(gridWidth) * gridSize, r.nextInt(gridHeight) * gridSize);
-					j = 0;
-				}
-			}
-			for (int j = 0; j < tiles.size(); j++)
-			{
-				if (pos.equals(tiles.elementAt(j).getPosition()))
-				{
-					if(tiles.elementAt(j).isAccessible())
-						return pos;
-					//generate new pos and start searching again
-					pos = new Position(r.nextInt(gridWidth) * gridSize, r.nextInt(gridHeight) * gridSize);
-					j = 0;
-				}
-			}
+			System.out.println("Error: cannot find unoccupied tile!");
+			return null;
 		}
-		System.out.println("Search for accessible tile: exceeded 10 tries");
-		return pos;
+
+		while(true)
+		{
+			Position pos = new Position(r.nextInt(gridWidth) * gridSize, r.nextInt(gridHeight) * gridSize);
+			if (ocuppiedPos.contains(pos))
+				continue;
+			return pos;
+		}
 	}
+
 	private void prepareAnimals(int wolfCnt, int hareCnt)
 	{
 		//#Todo: proper animal placement (groups?)
@@ -219,7 +216,7 @@ public class Game
 			for (int i = 0; i < wolfCnt; i++)
 			{
 				animals.add(
-						new Wolf(randAccessibleTile(), gridSize, 10, r.nextInt(84), 5, 0, 1000, 400)
+						new Wolf(unoccupiedTile(), gridSize, 10, r.nextInt(84), 5, 0, 1000, 400)
 				);
 			}
 			for (int i = 0; i < hareCnt; i++)
@@ -227,7 +224,7 @@ public class Game
 				//check if another animal isn't there
 				animals.add(
 						//TODO: update constructor parameters
-						new Hare(randAccessibleTile(),gridSize, 30, r.nextInt(96), 3, 5, 1000, 700)
+						new Hare(unoccupiedTile(),gridSize, 30, r.nextInt(96), 3, 5, 1000, 700)
 				);
 			}
 		}

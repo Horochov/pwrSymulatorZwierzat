@@ -108,9 +108,11 @@ public class PositionTest
 	public void equals()
 	{
 		Position a,b,c;
-		a = new Position(99,11);
-		b = new Position(99,11);
+		int x=r.nextInt(), y=r.nextInt();
+		a = new Position(x,y);
+		b = new Position(x,y);
 		c = a;
 		assertTrue(a.equals(b)&&b.equals(c)&&a.equals(c));
 	}
+
 }

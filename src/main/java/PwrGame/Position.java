@@ -75,10 +75,6 @@ public class Position
 		return new Position(this);
 	}
 
-	public boolean equals(Position pos)
-	{
-		return ((pos.getX()==posX)&&(pos.getY()==posY));
-	}
 	public boolean equalsLeft(Position pos)
     {
         return ((pos.getY()==posY)&&(pos.getX()-40==posX));
@@ -101,6 +97,14 @@ public class Position
 	{
 		if (! (obj instanceof Position ))
 			return false;
-		return (equals((Position) obj));
+		return ((((Position) obj).getX()==posX)&&(((Position) obj).getY()==posY));
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + posX;
+		result = prime * result + posY;
+		return result;
 	}
 }
