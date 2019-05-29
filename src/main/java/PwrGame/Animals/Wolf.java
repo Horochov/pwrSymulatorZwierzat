@@ -141,10 +141,32 @@ public class Wolf extends Animal
         g.drawImage(current,position.getX(),position.getY(),textureSize,textureSize,null);
     }
 
-    protected void procreate(Vector<Wolf> animals)
-    {
-
-    }
+//    @Override
+//    protected void procreate(Vector<Tile> tiles, Vector<Animal> animals)
+//    {
+//        for(Animal a: animals)
+//        {
+//            if(a instanceof Wolf)
+//            {
+//                Position position = a.getPosition();
+//                if (a.lust == 0 && a.age > 2000 && (position.equalsLeft(this.position) || position.equalsRight(this.position) || position.equalsUp(this.position) || position.equalsDown(this.position)))
+//                {
+//                    if(prepareTile(tiles, animals) != null)
+//                    {
+//                        procreation = true;
+//                        animals.add(
+//                                new Wolf(prepareTile(tiles, animals), (byte) 40, 200, 8640, 5, 50, 1000, 700, 1000, 200, 200, 20)
+//                        );
+//                        a.lust = a.maxLust;
+//                        a.fatigue -= 200;
+//                        break;
+//                    }
+//                    else
+//                        break;
+//                }
+//            }
+//        }
+//    }
 
 //    @Override
 //    public void process(Vector<Tile> tiles, Vector<Animal> animals)
@@ -198,8 +220,6 @@ public class Wolf extends Animal
     }
 
     //protected void searchForFood();
-    private boolean attackingLeft = false;
-    private boolean attackingRight = false;
 
     @Override
     protected void attack(Vector<Animal> animals)

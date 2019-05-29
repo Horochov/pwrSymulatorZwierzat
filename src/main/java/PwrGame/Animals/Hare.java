@@ -140,17 +140,40 @@ public class Hare extends Animal
         this.speed += 3;
     }
 
-    protected void procreate(Vector<Hare> animals)
-    {
-        for(Hare h : animals)
-        {
-            Position position = h.getPosition();
-            if((position.equalsRight(this.position) || position.equalsLeft(this.position) || position.equalsUp(this.position) || position.equalsDown(this.position)) && (h.lust == 0 && this.lust == 0))
-            {
-
-            }
-        }
-    }
+//    @Override
+//    protected void procreate(Vector<Tile> tiles, Vector<Animal> animals)
+//    {
+//        boolean success = false;
+//        for(Animal a: animals)
+//        {
+//            if(a instanceof Hare)
+//            {
+//                Position position = a.getPosition();
+//                if (a.lust <= 0 /*&& a.age > 2000 */&& (position.equalsLeft(this.position) || position.equalsRight(this.position) || position.equalsUp(this.position) || position.equalsDown(this.position)))
+//                {
+//                    if(prepareTile(tiles, animals) != null)
+//                    {
+//                        System.out.println("nie jest null");
+//                        success = true;
+//                        a.lust = a.maxLust;
+//                        a.fatigue -= 200;
+//                        a.procreation = true;
+//                    }
+//                    else
+//                        System.out.println("no ciagle jest 0 :|");
+//                    break;
+//                }
+//            }
+//        }
+//        if(success)
+//        {
+//            System.out.println("dociera se tu");
+//            procreation = true;
+//            animals.add(
+//                    new Hare(prepareTile(tiles, animals), (byte) 40, 100, 7560, 3, 0, 1000, 700, 1000, 50, 50, 10)
+//            );
+//        }
+//    }
 
     @Override
     protected void eat(Vector<Tile> tiles)

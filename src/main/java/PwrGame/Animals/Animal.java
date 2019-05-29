@@ -19,11 +19,15 @@ public abstract class Animal implements IAnimal
     private boolean drinking = false;
     protected boolean eating = false;
     protected boolean attacking = false;
+    protected boolean procreation = false;
     protected boolean eatingRight = false;
     protected boolean eatingLeft = false;
     protected boolean drinkingRight = false;
     protected boolean drinkingLeft = false;
     protected boolean lookingRight = false;
+    protected boolean attackingLeft = false;
+    protected boolean attackingRight = false;
+    protected Vector<Tile> possiblyOccupied;
     private boolean isAlive = true;
     protected int health;
     protected int age;
@@ -35,6 +39,7 @@ public abstract class Animal implements IAnimal
     protected int lust;
     protected int maxLust;
     protected int maxHealth;
+    private int deathPossibility;
     protected byte textureSize;
 
     public Animal(Position position, byte textureSize, int health, int age, int speed, int damage, int hunger, int thirst, int fatigue, int lust, int maxLust, int maxHealth)
@@ -55,20 +60,46 @@ public abstract class Animal implements IAnimal
         setTextures();
     }
 
+    protected Position prepareTile(Vector<Tile> tiles, Vector<Animal> animals)
+    {
+        Random r = new Random();
+        possiblyOccupied = TerrainHandler.limitViewSquare(tiles, this.position, 40);
+        possiblyOccupied.removeIf(tile -> !tile.isAccessible());
+        for(Animal a : animals)
+        {
+            for(int i = 0 ; i < possiblyOccupied.size() ; i++)
+            {
+                if(possiblyOccupied.elementAt(i).getPosition().equals(a.getPosition()))
+                {
+                    possiblyOccupied.remove(i--);
+                }
+            }
+
+        }
+        if(possiblyOccupied.size() > 0)
+        {
+            return possiblyOccupied.elementAt(r.nextInt(possiblyOccupied.size())).getPosition();
+        }
+        else
+            return null;
+    }
+
     @Override
     public boolean isAlive() {
         return isAlive;
     }
 
 
-    protected void move(Vector<Tile> tiles)
+    protected void move(Vector<Tile> possiblyOccupied)
     {
         Random r = new Random();
-        if(movement == 1) {
-            for (Tile t : tiles) {
-                Position position = t.getPosition();
-                if (position.equalsLeft(this.position)) {
-                    if (t.isAccessible()) {
+        if(movement == 1)
+        {
+            for (int i = 0 ; i < possiblyOccupied.size() ; i++) {
+//                Position position = t.getPosition();
+                if (possiblyOccupied.elementAt(i).getPosition().equalsLeft(this.position))
+                {
+                    if (possiblyOccupied.elementAt(i).isAccessible()) {
                         this.position.modifyX(-15);
                         movement = 2;
                         break;
@@ -78,14 +109,14 @@ public abstract class Animal implements IAnimal
                 movement = 0;
             }
         }
-            else if(movement == 4)
+        else if(movement == 4)
             {
-                 for (Tile t : tiles)
+                 for (int i = 0 ; i < possiblyOccupied.size() ; i++)
                  {
-                     Position position = t.getPosition();
-                     if (position.equalsUp(this.position))
+//                     Position position = t.getPosition();
+                     if (possiblyOccupied.elementAt(i).getPosition().equalsUp(this.position))
                      {
-                         if (t.isAccessible())
+                         if (possiblyOccupied.elementAt(i).isAccessible())
                           {
                               this.position.modifyY(-15);
                               movement = 5;
@@ -98,12 +129,12 @@ public abstract class Animal implements IAnimal
             }
         else if(movement == 7)
         {
-            for (Tile t : tiles)
+            for (int i = 0 ; i < possiblyOccupied.size() ; i++)
             {
-                Position position = t.getPosition();
-                if (position.equalsRight(this.position))
+//                Position position = t.getPosition();
+                if (possiblyOccupied.elementAt(i).getPosition().equalsRight(this.position))
                 {
-                    if (t.isAccessible())
+                    if (possiblyOccupied.elementAt(i).isAccessible())
                     {
                         this.position.modifyX(15);
                         movement = 8;
@@ -116,12 +147,12 @@ public abstract class Animal implements IAnimal
         }
         else if(movement == 10)
         {
-            for (Tile t : tiles)
+            for (int i = 0 ; i < possiblyOccupied.size() ; i++)
             {
-                Position position = t.getPosition();
-                if (position.equalsDown(this.position))
+//                Position position = t.getPosition();
+                if (possiblyOccupied.elementAt(i).getPosition().equalsDown(this.position))
                 {
-                    if (t.isAccessible())
+                    if (possiblyOccupied.elementAt(i).isAccessible())
                     {
                         this.position.modifyY(15);
                         movement = 11;
@@ -167,11 +198,12 @@ public abstract class Animal implements IAnimal
         }
     }
 
-
-    //protected void updateStatus();
     public abstract void display(Graphics g);
 
     protected abstract void eat(Vector<Tile> tiles);
+
+//    protected abstract void procreate(Vector<Tile> tiles, Vector<Animal> animals);
+
     //protected void lookAround();
 
 //    private int x = 0;
@@ -247,6 +279,7 @@ public abstract class Animal implements IAnimal
         this.thirst -= 1;
         this.hunger -= 1;
         this.fatigue -= 1;
+        this.age -= 1;
 
 
         if(this.thirst < 0)
@@ -261,7 +294,6 @@ public abstract class Animal implements IAnimal
             this.lust = this.maxLust;
         }
 
-
         if(this.fatigue < 0)
         {
             sleep();
@@ -271,6 +303,12 @@ public abstract class Animal implements IAnimal
         if(this. health < 1)
         {
             this.isAlive = false;
+        }
+
+        if(this.age < 0)
+        {
+            deathPossibility = r.nextInt(8);
+            if(deathPossibility == 8) {this.isAlive = false;}
         }
 
         time++;
@@ -309,9 +347,24 @@ public abstract class Animal implements IAnimal
         }
         else
             {
-            if (time == 9) {
+            if ((this.age > 2000 && time == 9) || (this.age < 2000 && time == 18)) {
 
-                if(this.lust > 0)
+
+                if(attacking)
+                {
+                    attacking = false;
+                    attackingLeft = false;
+                    attackingRight = false;
+                }
+
+//                if(procreation)
+//                {
+//                    this.lust = this.maxLust;
+//                    this.fatigue -= 200;
+//                    procreation = false;
+//                }
+
+                if(this.lust >= 0)
                 {
                     this.lust -= 5;
                 }
@@ -336,11 +389,11 @@ public abstract class Animal implements IAnimal
                     attack(animals);
                 }
 
-                if(attacking)
-                {
-                    attacking = false;
-                }
-                else if(sleeping)
+//                if(/*this.age > 2000 && */this.lust <= 0 )
+//                {
+//                    procreate(tiles, animals);
+//                }
+                if(sleeping)
                 {
                     if(this.fatigue < 700)
                     {
@@ -389,6 +442,17 @@ public abstract class Animal implements IAnimal
                     }
                 }
                 else {
+                    possiblyOccupied = TerrainHandler.limitViewSquare(tiles, this.position, 39);
+                    for(Animal a : animals)
+                    {
+                        for(int i = 0 ; i < possiblyOccupied.size() ; i++)
+                        {
+                            if(possiblyOccupied.elementAt(i).getPosition().equals(a.getPosition()))
+                            {
+                                possiblyOccupied.remove(i);
+                            }
+                        }
+                    }
                     switch (r.nextInt(5)) {
                         case 0:
                             movement = 1;
