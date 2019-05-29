@@ -34,7 +34,8 @@ public class Game
 	private Vector<Tile> tiles;
 
 
-	public Game(byte gridWidth, byte gridHeight, byte gridSize, int wolfCount, int hareCount )
+	public Game(byte gridWidth, byte gridHeight, byte gridSize, int wolfCount, int hareCount,
+	            int bushCount, int treeCount, int rockCount)
 	{
 		animals = new Vector<>(255);
 		tiles=new Vector<>(255);
@@ -43,6 +44,7 @@ public class Game
 		this.gridSize=gridSize;
 		prepareGraphics();
 		prepareTerrain(8);
+		placeObstacles(bushCount,treeCount,rockCount);
 		prepareAnimals(wolfCount,hareCount);
 	}
 
@@ -99,6 +101,81 @@ public class Game
 					tiles.add(new Grass(new Position(i * gridSize, j * gridSize), gridSize));
 				}
 			}
+	}
+	private void placeObstacles(int bushCount, int treeCount, int rockCount)
+	{
+		Random r = new Random();
+		while (treeCount>0)
+		{
+
+			//Find random grass tile, but not topmost one
+			int idxDwn = r.nextInt(tiles.size());
+			if((!(tiles.elementAt(idxDwn) instanceof Grass))
+					||(tiles.elementAt(idxDwn).getPosition().getY()==0))
+				continue;
+
+			//search for tree corona tile
+			Position topPos = tiles.elementAt(idxDwn).getPosition();
+			topPos.modifyY(-40);
+			int idxTop;
+			for (idxTop = 0; idxTop < tiles.size(); idxTop++)
+			{
+				if(tiles.elementAt(idxTop).getPosition().equals(topPos))
+					break;
+			}
+			//check if it is "standard" tile
+			if(!(tiles.elementAt(idxTop) instanceof Grass||
+					tiles.elementAt(idxTop) instanceof Water||
+					tiles.elementAt(idxTop) instanceof Sand))
+				continue;
+
+
+			//place tree stump
+			tiles.add(new Tree(tiles.elementAt(idxDwn),gridSize,true));
+			tiles.add(new Tree(tiles.elementAt(idxTop),gridSize,false));
+
+			//delete greater index first
+			tiles.removeElementAt(idxDwn>idxTop?idxDwn:idxTop);
+			tiles.removeElementAt(idxDwn<idxTop?idxDwn:idxTop);
+			treeCount--;
+		}
+		while (bushCount>0)
+		{
+
+			//Find random grass tile
+			int idx = r.nextInt(tiles.size());
+			if(!(tiles.elementAt(idx) instanceof Grass))
+			{
+				continue;
+			}
+
+			//save location and delet' it
+			Position pos = tiles.elementAt(idx).getPosition();
+			tiles.removeElementAt(idx);
+
+			//place Bush. George Bush.
+			tiles.add(new Bush(pos,gridSize));
+
+			bushCount--;
+		}
+		while (rockCount>0)
+		{
+
+			//Find random tile
+			int idx = r.nextInt(tiles.size());
+			if(!(tiles.elementAt(idx) instanceof Grass || tiles.elementAt(idx) instanceof Sand))
+				continue;
+
+			//save location and delet' it
+
+			//place Bush. George Bush.
+			tiles.add(new Rock(tiles.elementAt(idx),gridSize));
+
+			tiles.removeElementAt(idx);
+
+			rockCount--;
+		}
+
 	}
 
 	private Position randAccessibleTile()
@@ -163,6 +240,10 @@ public class Game
 
 	private void animal2corpse()
 	{
+		/*
+		 *  Search for dead animal and replace it with corpse.
+		 *  Will delete animal and tile, then create tile <animal>Corpse
+		 */
 		for (int i = 0; i <animals.size() ; i++)
 		{
 			//if animal is dead

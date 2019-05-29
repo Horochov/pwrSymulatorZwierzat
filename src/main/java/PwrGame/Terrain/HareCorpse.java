@@ -7,8 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
 
-public class HareCorpse
-		extends AnimatedTile
+public class HareCorpse	extends AnimatedTile
 {
 	public HareCorpse(Tile backgroundTile)
 	{

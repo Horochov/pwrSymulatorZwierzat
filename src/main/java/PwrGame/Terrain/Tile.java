@@ -52,7 +52,7 @@ public abstract class Tile
 
 	public Position getPosition()
 	{
-		return position;
+		return new Position(position);
 	}
 
 	public void setOccupied(Boolean occupied)
