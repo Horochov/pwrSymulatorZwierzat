@@ -24,6 +24,9 @@ public class Main
 	private JFormattedTextField tfBushCnt;
 	private JFormattedTextField tfRockCnt;
 
+	JLabel lLine1;
+	JLabel lLine2;
+
 	private byte defGridWid = 30;
 	private byte defGridHei = 20;
 	private byte defGridSiz = 40;
@@ -216,6 +219,9 @@ public class Main
 		tfRockCnt = new JFormattedTextField();
 		tfRockCnt.setValue(defRockCnt);
 
+		lLine1 = new JLabel();
+		lLine2 = new JLabel();
+
 		//Manage menu layout
 		c = new GridBagConstraints();
 		c.fill=GridBagConstraints.HORIZONTAL;
@@ -271,6 +277,15 @@ public class Main
 		c.gridy++;
 		frame.add(bPause,c);
 
+		c.gridy++;
+		c.insets.top=300;
+		frame.add(lLine1,c);
+
+		c.gridy++;
+		c.insets.top=0;
+		frame.add(lLine2,c);
+
+
 
 		//Finalize frame creation
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -286,7 +301,23 @@ public class Main
 			public void run()
 			{
 				if(!isPaused)
+				{
 					game.process();
+					if(game.getAnimalCount()<=1)
+					{
+						isPaused=true;
+						lLine1.setText("KONIEC GRY");
+						if(game.getAnimalCount()==0)
+							lLine2.setText("Nikt nie wygrał");
+						else
+							lLine2.setText("wygrał "+(game.getHareCount()>0?"zając":"wilk"));
+
+						return;
+					}
+
+					lLine1.setText("Iliść zajęcy: "+game.getHareCount());
+					lLine2.setText("Ilość wilków: "+game.getWolfCount());
+				}
 				game.display();
 				frame.repaint();
 			}

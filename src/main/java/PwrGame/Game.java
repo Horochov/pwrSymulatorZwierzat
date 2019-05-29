@@ -305,4 +305,26 @@ public class Game
 	{
 		return panel;
 	}
+
+	public int getHareCount()
+	{
+		int i=0;
+		for(Animal animal: animals)
+			if(animal instanceof Hare)
+				i++;
+		return i;
+	}
+	public int getWolfCount()
+	{
+		int i=0;
+		for(Animal animal: animals)
+			if(animal instanceof Wolf)
+				i++;
+		return i;
+	}
+	public int getAnimalCount()
+	{
+		return animals.size();
+	}
+
 }
