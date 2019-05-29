@@ -171,9 +171,11 @@ public class Game
 				Position position = animals.elementAt(i).getPosition();
 				//get tile index at animal position
 				int j;
+				Vector<Tile> til = TerrainHandler.limitViewSquare(tiles, position, gridSize-1); //should round value to 1 tile
+
 				for (j = 0; j < tiles.size(); j++)
 				{
-					if (position.equals(tiles.elementAt(j).getPosition()))
+					if (til.elementAt(0).getPosition().equals(tiles.elementAt(j).getPosition()))
 						break;
 				}
 				//add corpse
