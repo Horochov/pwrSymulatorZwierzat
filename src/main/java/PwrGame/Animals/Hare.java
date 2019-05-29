@@ -1,6 +1,7 @@
 package PwrGame.Animals;
 
 import PwrGame.Position;
+import PwrGame.Terrain.Grass;
 import PwrGame.Terrain.Tile;
 
 import javax.swing.*;
@@ -138,7 +139,7 @@ public class Hare extends Animal
     {
         for(Tile t : tiles)
         {
-            if(t.getResourceType() == Tile.ResourceType.grass)
+            if(t instanceof Grass)
             {
                 Position position = t.getPosition();
                 if(position.equalsRight(this.position))

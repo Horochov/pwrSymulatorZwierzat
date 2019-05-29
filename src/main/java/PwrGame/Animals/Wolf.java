@@ -2,6 +2,7 @@ package PwrGame.Animals;
 
 import PwrGame.Position;
 import PwrGame.Terrain.Tile;
+import PwrGame.Terrain.Water;
 
 import javax.swing.*;
 import java.awt.*;
@@ -137,7 +138,7 @@ public class Wolf extends Animal
     {
         for(Tile t : tiles)
         {
-            if(t.getResourceType() == Tile.ResourceType.water)
+            if(t instanceof Water)
             {
                 Position position = t.getPosition();
                 if(position.equalsRight(this.position))

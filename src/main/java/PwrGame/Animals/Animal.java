@@ -2,6 +2,7 @@ package PwrGame.Animals;
 
 import PwrGame.Position;
 import PwrGame.Terrain.Tile;
+import PwrGame.Terrain.Water;
 
 import java.awt.*;
 import java.util.Random;
@@ -145,7 +146,7 @@ public abstract class Animal implements IAnimal
     {
         for(Tile t : tiles)
         {
-            if(t.getResourceType() == Tile.ResourceType.water)
+            if(t instanceof Water)
             {
                 Position position = t.getPosition();
                 if(this.thirst < 300 && position.equalsRight(this.position))

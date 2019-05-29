@@ -3,9 +3,8 @@ package PwrGame;
 import PwrGame.Animals.Animal;
 import PwrGame.Animals.Hare;
 import PwrGame.Animals.Wolf;
+import PwrGame.Terrain.*;
 import PwrGame.Terrain.OpenSimplexNoise.OpenSimplexNoise;
-import PwrGame.Terrain.Textures;
-import PwrGame.Terrain.Tile;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +28,6 @@ public class Game
 	private byte gridHeight;   //vertical (y) element  count
 	private byte gridWidth;    //horizontal (x) element  count
 	private byte gridSize;     //grid element size
-//	private int tps;           //ticks per second
 
 	//resources
 	private Vector<Animal> animals;
@@ -43,7 +41,6 @@ public class Game
 		this.gridWidth=gridWidth;
 		this.gridHeight=gridHeight;
 		this.gridSize=gridSize;
-//		this.tps=ticksPerSecond;
 		prepareGraphics();
 		prepareTerrain(8);
 		prepareAnimals(wolfCount,hareCount);
@@ -82,7 +79,6 @@ public class Game
 
 	private void prepareTerrain(int divider)
 	{
-		Textures textures= new Textures();
 		Random r = new Random();
 		long seed=r.nextLong();
 		OpenSimplexNoise noise = new OpenSimplexNoise(seed);
@@ -93,18 +89,14 @@ public class Game
 				double rand = Math.abs(noise.eval((double) i / divider, (double) j / divider));
 
 				if (rand > 0.6)
-					tiles.add(new Tile(textures.getWater(), false, new Position(i * gridSize, j * gridSize), gridSize,
-					                   Tile.ResourceType.water, (byte) 1, (byte) 1, (byte) 1, (byte) 1)
-					          //Y'know, casting literal to byte... Just Java things.
+					tiles.add(new Water(new Position(i * gridSize, j * gridSize), gridSize)
 					);
 				else if (rand > 0.5)
-					tiles.add(new Tile(textures.getSand(), true, new Position(i * gridSize, j * gridSize), gridSize)
-
+					tiles.add(new Sand(new Position(i * gridSize, j * gridSize), gridSize)
 					);
 				else
 				{
-					tiles.add(new Tile(textures.getGrass(), true, new Position(i * gridSize, j * gridSize), gridSize,
-					                   Tile.ResourceType.grass, (byte)(r.nextInt(textures.getGrass().length)), (byte)(textures.getGrass().length-1), (byte) 100, (byte) 1));
+					tiles.add(new Grass(new Position(i * gridSize, j * gridSize), gridSize));
 				}
 			}
 	}
@@ -169,8 +161,42 @@ public class Game
 		}
 	}
 
+	private void animal2corpse()
+	{
+		for (int i = 0; i <animals.size() ; i++)
+		{
+			//if animal is dead
+			if(!animals.elementAt(i).isAlive())
+			{
+				Position position = animals.elementAt(i).getPosition();
+				//get tile index at animal position
+				int j;
+				for (j = 0; j < tiles.size(); j++)
+				{
+					if (position.equals(tiles.elementAt(j).getPosition()))
+						break;
+				}
+				//add corpse
+				if(animals.elementAt(i) instanceof Hare)
+					tiles.add(
+							new HareCorpse(tiles.elementAt(j))
+					);
+				else
+					tiles.add(
+							new WolfCorpse(tiles.elementAt(j))
+					);
+
+				animals.remove(i);
+				tiles.remove(j);
+
+			}
+		}
+	}
+
+
 	public void process()
 	{
+		animal2corpse();
 		tiles.forEach(tile -> tile.process());
 		animals.forEach(animal -> animal.process(tiles,animals));
 	}
