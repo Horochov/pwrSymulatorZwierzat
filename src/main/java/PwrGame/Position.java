@@ -20,13 +20,15 @@ public class Position
 		posY=pos.getY();
 	}
 
-	public int modifyX(int dx)
+	public Position modifyX(int dx)
 	{
-		return posX+=dx;
+		posX+=dx;
+		return new Position(this);
 	}
-	public int modifyY(int dy)
+	public Position modifyY(int dy)
 	{
-		return posY+=dy;
+		posY+=dy;
+		return new Position(this);
 	}
 
 	public Position modify(int dx, int dy)
@@ -104,5 +106,9 @@ public class Position
 		result = prime * result + posX;
 		result = prime * result + posY;
 		return result;
+	}
+	public int distanceTo(Position pos)
+	{
+		return (int) Math.sqrt(Math.pow(Math.abs(pos.getY()-posY), 2)+Math.pow(Math.abs(pos.getX()-posX), 2));
 	}
 }

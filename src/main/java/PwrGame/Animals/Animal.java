@@ -28,7 +28,6 @@ public abstract class Animal implements IAnimal
     protected boolean attackingLeft = false;
     protected boolean attackingRight = false;
     protected Vector<Tile> possiblyOccupied;
-    private boolean isAlive = true;
     protected int health;
     protected int age;
     protected int speed;
@@ -84,84 +83,172 @@ public abstract class Animal implements IAnimal
             return null;
     }
 
-    @Override
+
     public boolean isAlive() {
         return health>0;
     }
 
 
-    protected void move(Vector<Tile> possiblyOccupied)
+    protected void move(Vector<Tile> tiles, Vector<Animal>animals)
     {
-        Random r = new Random();
-        if(movement == 1)
+        int i;  //target tile index
+        Position pos=null;  //target tile pos
+        if(movement == 1)   //init left
         {
-            for (int i = 0 ; i < possiblyOccupied.size() ; i++) {
-//                Position position = t.getPosition();
-                if (possiblyOccupied.elementAt(i).getPosition().equalsLeft(this.position))
+            //find tile located on the left
+
+            for (i = 0; i < tiles.size(); i++)
+            {
+                pos=tiles.elementAt(i).getPosition();
+                if(position.equals(pos.getCopy().modifyX(40)))
                 {
-                    if (possiblyOccupied.elementAt(i).isAccessible()) {
-                        this.position.modifyX(-15);
-                        movement = 2;
-                        break;
-                    }
-                    movement = 0;
+                    break;
                 }
-                movement = 0;
             }
+            if(i>=tiles.size())  //at the end of map
+            {
+                movement=0;
+                return;
+            }
+            if(!tiles.elementAt(i).isAccessible())  //obstacle on the way
+            {
+                movement=0;
+                return;
+            }
+
+            //check if another animal isn't too close
+            for (Animal animal: animals)
+            {
+                if(animal.getPosition().equals(position))//checking with "host" animal
+                    continue;
+
+                if(animal.getPosition().distanceTo(pos)<40)
+                {
+                    System.out.println("adist: "+animal.getPosition().distanceTo(pos));
+                    movement=0;
+                    return;
+                }
+            }
+//            System.out.println("d");
+            this.position.modifyX(-15);
+            movement = 2;
+            return;
         }
-        else if(movement == 4)
+        else if(movement == 4)  //init up
             {
-                 for (int i = 0 ; i < possiblyOccupied.size() ; i++)
-                 {
-//                     Position position = t.getPosition();
-                     if (possiblyOccupied.elementAt(i).getPosition().equalsUp(this.position))
-                     {
-                         if (possiblyOccupied.elementAt(i).isAccessible())
-                          {
-                              this.position.modifyY(-15);
-                              movement = 5;
-                              break;
-                          }
-                         movement = 0;
-                     }
-                     movement = 0;
-                 }
-            }
-        else if(movement == 7)
-        {
-            for (int i = 0 ; i < possiblyOccupied.size() ; i++)
+            for (i = 0; i < tiles.size(); i++)
             {
-//                Position position = t.getPosition();
-                if (possiblyOccupied.elementAt(i).getPosition().equalsRight(this.position))
+                pos=tiles.elementAt(i).getPosition();
+                if(position.equals(pos.getCopy().modifyY(40)))
                 {
-                    if (possiblyOccupied.elementAt(i).isAccessible())
-                    {
-                        this.position.modifyX(15);
-                        movement = 8;
-                        break;
-                    }
-                    movement = 0;
+                    break;
                 }
-                movement = 0;
             }
+            if(i>=tiles.size())  //at the end of map
+            {
+                movement=0;
+                return;
+            }
+            if(!tiles.elementAt(i).isAccessible())  //obstacle on the way
+            {
+                movement=0;
+                return;
+            }
+
+            //check if another animal isn't too close
+            for (Animal animal: animals)
+            {
+                if(animal.getPosition().equals(position))//checking with this animal
+                    continue;
+
+                if(animal.getPosition().distanceTo(pos)<40)
+                {
+                    System.out.println("bdist: "+animal.getPosition().distanceTo(pos));
+                    movement=0;
+                    return;
+                }
+            }
+//            System.out.println("d");
+            this.position.modifyY(-15);
+            movement = 5;
+            return;
+            }
+        else if(movement == 7) //init right
+        {
+            for (i = 0; i < tiles.size(); i++)
+            {
+                pos=tiles.elementAt(i).getPosition();
+                if(position.equals(pos.getCopy().modifyX(-40)))
+                {
+                    break;
+                }
+            }
+            if(i>=tiles.size())  //at the end of map
+            {
+                movement=0;
+                return;
+            }
+            if(!tiles.elementAt(i).isAccessible())  //obstacle on the way
+            {
+                movement=0;
+                return;
+            }
+
+            //check if another animal isn't too close
+            for (Animal animal: animals)
+            {
+                if(animal.getPosition().equals(position))//checking with this animal
+                    continue;
+
+                if(animal.getPosition().distanceTo(pos)<40)
+                {
+                    System.out.println("cdist: "+animal.getPosition().distanceTo(pos));
+                    movement=0;
+                    return;
+                }
+            }
+//            System.out.println("d");
+            this.position.modifyX(15);
+            movement = 8;
+            return;
         }
-        else if(movement == 10)
+        else if(movement == 10) //init down
         {
-            for (int i = 0 ; i < possiblyOccupied.size() ; i++)
+            for (i = 0; i < tiles.size(); i++)
             {
-//                Position position = t.getPosition();
-                if (possiblyOccupied.elementAt(i).getPosition().equalsDown(this.position))
+                pos=tiles.elementAt(i).getPosition();
+                if(position.equals(pos.getCopy().modifyY(-40)))
                 {
-                    if (possiblyOccupied.elementAt(i).isAccessible())
-                    {
-                        this.position.modifyY(15);
-                        movement = 11;
-                        break;
-                    }
-                    movement = 0;
+                    break;
                 }
-                movement = 0;
             }
+            if(i>=tiles.size())  //at the end of map
+            {
+                movement=0;
+                return;
+            }
+            if(!tiles.elementAt(i).isAccessible())  //obstacle on the way
+            {
+                movement=0;
+                return;
+            }
+
+            //check if another animal isn't too close
+            for (Animal animal: animals)
+            {
+                if(animal.getPosition().equals(position))//checking with this animal
+                    continue;
+
+                if(animal.getPosition().distanceTo(pos)<40)
+                {
+                    movement=0;
+                    return;
+                }
+            }
+//            System.out.println("d");
+            this.position.modifyY(15);
+            movement = 11;
+            return;
         }
     }
 
@@ -269,6 +356,7 @@ public abstract class Animal implements IAnimal
 
     private int time = 0;
     protected int movement = 0;
+
     public void process(Vector<Tile> tiles, Vector<Animal> animals)
     {
         Random r = new Random();
@@ -296,15 +384,10 @@ public abstract class Animal implements IAnimal
             this.lust = this.maxLust;
         }
 
-        if(this. health < 1)
-        {
-            this.isAlive = false;
-        }
-
         if(this.age < 0)
         {
             deathPossibility = r.nextInt(8);
-            if(deathPossibility == 8) {this.isAlive = false;}
+            if(deathPossibility == 0) {this.health = 0;}
         }
 
         time++;
@@ -437,34 +520,24 @@ public abstract class Animal implements IAnimal
                         eatingRight = false;
                     }
                 }
-                else {
-                    possiblyOccupied = TerrainHandler.limitViewSquare(tiles, this.position, 39);
-                    for(Animal a : animals)
-                    {
-                        for(int i = 0 ; i < possiblyOccupied.size() ; i++)
-                        {
-                            if(possiblyOccupied.elementAt(i).getPosition().equals(a.getPosition()))
-                            {
-                                possiblyOccupied.remove(i);
-                            }
-                        }
-                    }
+                else {  //move
+
                     switch (r.nextInt(5)) {
                         case 0:
                             movement = 1;
-                            move(tiles);
+                            move(tiles,animals);
                             break;
                         case 1:
                             movement = 4;
-                            move(tiles);
+                            move(tiles,animals);
                             break;
                         case 2:
                             movement = 7;
-                            move(tiles);
+                            move(tiles,animals);
                             break;
                         case 3:
                             movement = 10;
-                            move(tiles);
+                            move(tiles,animals);
                             break;
                         case 4:
                             if (this.hunger > 700 && this.thirst > 600)
@@ -481,6 +554,6 @@ public abstract class Animal implements IAnimal
 
     public Position getPosition()
     {
-        return position;
+        return new Position(position);
     }
 }

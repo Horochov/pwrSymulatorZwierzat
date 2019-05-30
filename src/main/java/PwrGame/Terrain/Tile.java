@@ -9,17 +9,8 @@ public abstract class Tile
 	/*
 	 *  Contains background image and resource information
 	 */
-	public enum ResourceType
-	{
-		none,
-		water,
-		grass,
-		corpse,
-	}
-
-
-	protected Boolean accessible;
-	protected  Boolean occupied;
+	protected boolean accessible;
+//	protected  boolean occupied;
 	protected Position position;
 	protected byte size;
 	protected Image texture;
@@ -55,13 +46,13 @@ public abstract class Tile
 		return new Position(position);
 	}
 
-	public void setOccupied(Boolean occupied)
-	{
-		this.occupied = occupied;
-	}
-
-	public Boolean isOccupied()
-	{
-		return occupied;
-	}
+//	public void setOccupied(Boolean occupied)
+//	{
+//		this.occupied = occupied;
+//	}
+//
+//	public Boolean isOccupied()
+//	{
+//		return occupied;
+//	}
 }
