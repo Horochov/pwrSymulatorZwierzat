@@ -24,8 +24,8 @@ public class Main
 	private JFormattedTextField tfBushCnt;
 	private JFormattedTextField tfRockCnt;
 
-	JLabel lLine1;
-	JLabel lLine2;
+	private JLabel lLine1;
+	private JLabel lLine2;
 
 	private byte defGridWid = 30;
 	private byte defGridHei = 20;
